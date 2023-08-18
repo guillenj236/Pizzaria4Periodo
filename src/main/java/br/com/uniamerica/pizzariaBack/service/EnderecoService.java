@@ -7,6 +7,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 @Service
 public class EnderecoService {
@@ -19,6 +20,13 @@ public class EnderecoService {
 
         var endereco = new Endereco();
         BeanUtils.copyProperties(enderecoDTO,endereco);
+
+        Assert.isTrue(endereco.getBairro() != null, "Bairro nao pode ser nulo!!");
+        Assert.isTrue(endereco.getBairro().length() <= 30, "Maximo de caracteres para bairro alcancado!");
+
+        Assert.isTrue(endereco.getRua() != null, "A rua nao pode ser nula!!");
+        Assert.isTrue(endereco.getRua().length() <= 30, "Maximo de caracteres para rua alcancados!!");
+
 
         this.enderecoRep.save(endereco);
     }

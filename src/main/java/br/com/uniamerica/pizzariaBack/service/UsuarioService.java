@@ -7,6 +7,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 @Service
 public class UsuarioService {
@@ -19,6 +20,10 @@ public class UsuarioService {
 
         var usuario = new Usuario();
         BeanUtils.copyProperties(usuarioDTO,usuario);
+
+        Assert.isTrue(usuario.getNomeUsuario().length() <= 50, "Maximo de caracteres excedidos para Nome");
+        Assert.isTrue(usuario.getCPF().length() <= 20, "Maximo de caracteres alcancados para CPF");
+        Assert.isTrue(usuario.getNomeUsuario() != null, "Nome nao pode ser nulo!!");
 
         this.usuarioRep.save(usuario);
     }

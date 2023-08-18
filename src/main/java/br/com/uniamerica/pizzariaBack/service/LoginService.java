@@ -26,6 +26,8 @@ public class LoginService {
         Assert.isTrue(!login.getNomeLogin().equals(""), "O nome do login não pode ser nulo");
         Assert.isTrue(!login.getSenhaLogin().equals(""),"A senha nao pode ser nula!!");
 
+       // Assert.isTrue(!login.getUsuario().equals(""), "O usuario nao pode ser nulo");
+
         this.loginRep.save(login);
     }
 
