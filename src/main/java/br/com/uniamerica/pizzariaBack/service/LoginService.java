@@ -6,6 +6,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 @Service
 public class LoginService {
@@ -18,6 +19,12 @@ public class LoginService {
 
         var login = new Login();
         BeanUtils.copyProperties(loginDTO,login);
+
+        Assert.isTrue(login.getNomeLogin().length() <= 30, "Maximo de caracteres alcançados");
+        Assert.isTrue(login.getSenhaLogin().length() <= 20, "Maximo de caracteres na senha alcançados");
+
+        Assert.isTrue(!login.getNomeLogin().equals(""), "O nome do login não pode ser nulo");
+        Assert.isTrue(!login.getSenhaLogin().equals(""),"A senha nao pode ser nula!!");
 
         this.loginRep.save(login);
     }

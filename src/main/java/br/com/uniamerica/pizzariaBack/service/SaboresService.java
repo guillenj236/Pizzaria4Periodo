@@ -45,7 +45,7 @@ public class SaboresService {
         final Sabores saboresBanco = this.saboresRep.findById(id).orElse(null);
 
         if (saboresBanco == null || !saboresBanco.getId().equals(id)){
-            throw new RuntimeException("Não foi possivel identificar o modelo informado.");
+            throw new RuntimeException("Não foi possivel identificar o sabor informado.");
         }
         this.saboresRep.delete(saboresBanco);
     }
