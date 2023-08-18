@@ -16,6 +16,7 @@ public class Produtos extends AbstractEntity{
     private int quantidade_prod;
 
 
+    @Getter @Setter
    @ManyToMany
     private List <EstoqueProds> estoqueProds;
 

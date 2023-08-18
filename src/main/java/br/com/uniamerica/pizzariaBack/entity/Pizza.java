@@ -3,15 +3,28 @@ package br.com.uniamerica.pizzariaBack.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
 @Table(name = "pizza", schema = "public")
 public class Pizza extends AbstractEntity{
 
-    @ManyToMany
+    @Getter@Setter
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "pizza_sabor",
+            uniqueConstraints = @UniqueConstraint(
+                    columnNames = {
+                            "pizza_id",
+                            "sabor_id"
+                    }
+            ),
+            joinColumns = @JoinColumn(
+                    name = "pizza_id"
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "sabor_id"
+            )
+    )
     private List<Sabores> sabores;
 
     @Getter @Setter
@@ -23,6 +36,7 @@ public class Pizza extends AbstractEntity{
     private int quantidadePizza;
 
     @Enumerated(EnumType.STRING)
+    @Getter @Setter
     @Column(name = "tamanho")
     private Tamanho tamanho;
 

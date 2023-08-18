@@ -19,22 +19,9 @@ public class Endereco extends AbstractEntity{
     @Column (name = "numeroEnd", length = 5, nullable = false)
     private int numeroEnd;
 
-    @Getter @Setter
+    @Setter
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinTable( name = "endereco_usuario",
-            uniqueConstraints = @UniqueConstraint(
-                    columnNames = {
-                            "endereco_id",
-                            "usuario_id"
-                    }
-            ),
-            joinColumns = @JoinColumn(
-                    name = "endereco_id"
-            ),
-            inverseJoinColumns = @JoinColumn(
-                    name = "usuario_id"
-            )
-    )
+    @JoinColumn(name = "usuario_id")
     private Usuario usuario;
 
 }

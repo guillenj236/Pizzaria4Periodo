@@ -1,7 +1,5 @@
 package br.com.uniamerica.pizzariaBack.entity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,4 +15,21 @@ public class Login extends AbstractEntity {
     @Column (name = "senhaLogin", length = 20, nullable = false, unique = true)
     private String senhaLogin;
 
+    @Getter @Setter
+    @OneToOne (fetch = FetchType.EAGER)
+    @JoinTable(name = "login_usuario",
+            uniqueConstraints =@UniqueConstraint(
+                    columnNames = {
+                            "login_id",
+                            "usuario_id"
+                    }
+            ),
+            joinColumns = @JoinColumn(
+                    name = "login_id"
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "usuario_id"
+            )
+    )
+    private Usuario usuario;
 }
