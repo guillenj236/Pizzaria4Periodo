@@ -20,7 +20,7 @@ public class FuncionarioService {
         var funcionario = new Funcionario();
         BeanUtils.copyProperties(funcionarioDTO,funcionario);
 
-        Assert.isTrue(funcionario.getNomeFunc() != null, "O nome do funcionario nao pode ser nulo!!");
+        Assert.isTrue(!funcionario.getNomeFunc().equals(""), "O nome do funcionario nao pode ser nulo!!");
         Assert.isTrue(funcionario.getNomeFunc().length() <= 40, "Maximo de caracteres para nome excedido!");
 
         this.funcionarioRep.save(funcionario);
