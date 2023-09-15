@@ -31,17 +31,17 @@ public class PizzaService {
         }
         if(pizza.getTamanho() == Tamanho.M){
 
-            Assert.isTrue(pizza.getSabores().size() >= 1 || pizza.getSabores().size() <= 2,"Este tamanho só tem de 1 a 2 sabores!!");
+            Assert.isTrue(pizza.getSabores().size() >= 1 && pizza.getSabores().size() <= 2,"Este tamanho só tem de 1 a 2 sabores!!");
             pizza.setPrecoPizza(30);
         }
         if(pizza.getTamanho() == Tamanho.G){
 
-            Assert.isTrue(pizza.getSabores().size() >= 1 || pizza.getSabores().size() <= 3,"Este tamanho tem de 1 a 3 sabores!!");
+            Assert.isTrue(pizza.getSabores().size() >= 1 && pizza.getSabores().size() <= 3,"Este tamanho tem de 1 a 3 sabores!!");
             pizza.setPrecoPizza(45);
         }
         if(pizza.getTamanho() == Tamanho.GG){
 
-            Assert.isTrue(pizza.getSabores().size() >= 1 || pizza.getSabores().size() <= 4,"Este tamanho tem de 1 a 4 sabores!!");
+            Assert.isTrue(pizza.getSabores().size() >= 1 && pizza.getSabores().size() <= 4,"Este tamanho tem de 1 a 4 sabores!!");
             pizza.setPrecoPizza(55);
         }
 

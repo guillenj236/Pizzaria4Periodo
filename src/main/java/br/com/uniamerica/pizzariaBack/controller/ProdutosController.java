@@ -50,7 +50,7 @@ public class ProdutosController {
                 return ResponseEntity.internalServerError().body("Nao foi possivel indentificar o registro informado");
             }
             this.produtosService.atualizaProduto(produtosDTO);
-            return ResponseEntity.ok("Registro Cadastrado com Sucesso");
+            return ResponseEntity.ok("Produto Editado com Sucesso");
         }
         catch (DataIntegrityViolationException e){
             return ResponseEntity.internalServerError()
@@ -66,7 +66,7 @@ public class ProdutosController {
         try {
 
             this.produtosService.excluirProduto(id);
-            return ResponseEntity.ok("Desativado ou excluído");
+            return ResponseEntity.ok("Produto Excluido Com Sucesso");
         }
         catch (RuntimeException e){
             return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
