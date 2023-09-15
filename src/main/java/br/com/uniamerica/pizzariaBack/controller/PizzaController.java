@@ -47,10 +47,10 @@ public class PizzaController {
             final Pizza pizza1 = this.pizzaRep.findById(id).orElse(null);
 
             if (pizza1 == null || pizza1.getId() != (pizzaDTO.getId())){
-                return ResponseEntity.internalServerError().body("Nao foi possivel indentificar o registro informado");
+                return ResponseEntity.internalServerError().body("Nao foi possivel indentificar a pizza informado");
             }
           ////  this.pizzaService.atualizPizza(pizza);
-            return ResponseEntity.ok("Registro EDITADO com Sucesso");
+            return ResponseEntity.ok("pizza EDITADA com Sucesso");
         }
         catch (DataIntegrityViolationException e){
             return ResponseEntity.internalServerError()
