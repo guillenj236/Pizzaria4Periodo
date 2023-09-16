@@ -1,5 +1,6 @@
 package br.com.uniamerica.pizzariaBack.dto;
 
+import br.com.uniamerica.pizzariaBack.entity.Usuario;
 import jakarta.persistence.Column;
 import lombok.Data;
 import lombok.Getter;
@@ -12,4 +13,6 @@ public class LoginDTO extends AbstractDTO {
     private String nomeLogin;
 
     private String senhaLogin;
+    private Usuario usuario;
+
 }

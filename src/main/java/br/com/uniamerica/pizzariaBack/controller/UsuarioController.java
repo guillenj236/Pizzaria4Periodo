@@ -38,7 +38,7 @@ public class UsuarioController {
     @PostMapping
     public ResponseEntity<?> cadastrarUser(@RequestBody final UsuarioDTO usuarioDTO){
         try {
-            this.usuarioService.cadastraUsuario(usuarioDTO);
+            usuarioService.cadastraUsuario(usuarioDTO);
             return ResponseEntity.ok("Usuario cadastrado com sucesso!!");
         }
         catch (Exception e){
@@ -47,15 +47,14 @@ public class UsuarioController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> editarUsuario(@PathVariable("id") final Long id, @RequestBody final UsuarioDTO usuarioDTO){
+    public ResponseEntity<?> editarUsuario(@PathVariable("id") final Long id, @RequestBody final Usuario usuario){
         try {
+            usuarioService.atualizaUsuario(usuario);
             final Usuario usuario1 = this.usuarioRep.findById(id).orElse(null);
-
-            if (usuario1 == null || usuario1.getId() != (usuarioDTO.getId())){
-                return ResponseEntity.internalServerError().body("Nao foi possivel identificar o usuario informado");
+            if (usuario1 == null || !usuario1.getId().equals(usuario.getId())){
+                throw new RuntimeException("Nao foi possivel indentificar o usuario informado");
             }
-            this.usuarioService.atualizaUsuario(usuarioDTO);
-            return ResponseEntity.ok("Registro EDITADO com sucesso");
+            return ResponseEntity.ok("USUARIO editado com Sucesso");
         }
         catch (DataIntegrityViolationException e){
             return ResponseEntity.internalServerError()

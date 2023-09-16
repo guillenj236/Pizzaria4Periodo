@@ -44,7 +44,7 @@ public class SaboresController {
     @PutMapping("/{id}")
     public ResponseEntity<?> editaSabor(@PathVariable("id") final Long id, @RequestBody final Sabores sabores){
         try {
-            saboresService.atualizaSabor(sabores); // MUDAR AQUI EM MUDAR AQUI
+            saboresService.atualizaSabor(sabores);
             final Sabores sabores1 = this.saboresRep.findById(id).orElse(null);
 
             if (sabores1 == null || !sabores1.getId().equals(sabores.getId())){

@@ -40,15 +40,15 @@ public class LoginController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity <?> editarUser(@PathVariable("id") final Long id, @RequestBody final LoginDTO loginDTO){
+    public ResponseEntity <?> editarUser(@PathVariable("id") final Long id, @RequestBody final Login login){
         try {
-            final Login login1 = this.loginRep.findById(id).orElse(null);
+         loginService.atualizaLogin(login);
+         final Login login1 = this.loginRep.findById(id).orElse(null);
 
-            if (login1 == null || login1.getId() != (loginDTO.getId())){
-                return ResponseEntity.internalServerError().body("Nao foi possivel indentificar o login informado");
+            if (login1 == null || !login1.getId().equals(login.getId())){
+                throw new RuntimeException("Nao foi possivel indentificar o login informado");
             }
-            this.loginService.atualizaLogin(loginDTO);
-            return ResponseEntity.ok("Registro EDITADO com Sucesso");
+            return ResponseEntity.ok("LOGIN editado com Sucesso");
         }
         catch (DataIntegrityViolationException e){
             return ResponseEntity.internalServerError()

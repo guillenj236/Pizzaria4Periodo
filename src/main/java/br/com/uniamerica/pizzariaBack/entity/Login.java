@@ -12,7 +12,7 @@ public class Login extends AbstractEntity {
     private String nomeLogin;
 
     @Getter @Setter
-    @Column (name = "senhaLogin", length = 20, nullable = false, unique = true)
+    @Column (name = "senhaLogin", length = 20, nullable = false)
     private String senhaLogin;
 
     @Getter @Setter

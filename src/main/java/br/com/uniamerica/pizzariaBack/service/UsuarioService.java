@@ -1,6 +1,7 @@
 package br.com.uniamerica.pizzariaBack.service;
 
 import br.com.uniamerica.pizzariaBack.dto.UsuarioDTO;
+import br.com.uniamerica.pizzariaBack.entity.Sabores;
 import br.com.uniamerica.pizzariaBack.entity.Usuario;
 import br.com.uniamerica.pizzariaBack.repository.UsuarioRep;
 import org.springframework.beans.BeanUtils;
@@ -21,23 +22,23 @@ public class UsuarioService {
         var usuario = new Usuario();
         BeanUtils.copyProperties(usuarioDTO,usuario);
 
+        Assert.isTrue(usuario.getTelefone().length() <= 15, "Limite de caracteres excedido para TELEFONE");
+        Assert.isTrue(!usuario.getTelefone().equals(""), "O TELEFONE não pode ser nulo!!");
         Assert.isTrue(usuario.getNomeUsuario().length() <= 50, "Maximo de caracteres excedidos para Nome");
-        Assert.isTrue(usuario.getCPF().length() <= 20, "Maximo de caracteres alcancados para CPF");
-        Assert.isTrue(usuario.getNomeUsuario() != null, "Nome nao pode ser nulo!!");
+        Assert.isTrue(!usuario.getNomeUsuario().equals(""), "Nome nao pode ser nulo!!");
+
+        Usuario usuarioExist = usuarioRep.findByNomeUsuario(usuario.getNomeUsuario());
+        Assert.isTrue(usuarioExist == null || usuarioExist.equals(usuario), "Este usuario já existe!!");
 
         this.usuarioRep.save(usuario);
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void atualizaUsuario(UsuarioDTO usuarioDTO) {
-        Usuario usuarioExistente = this.usuarioRep.findById(usuarioDTO.getId()).orElse(null);
+    public void atualizaUsuario(Usuario usuario) {
+        final Usuario usuarioExistente = this.usuarioRep.findById(usuario.getId()).orElse(null);
 
-        if (usuarioExistente != null) {
+            this.usuarioRep.save(usuario);
 
-            BeanUtils.copyProperties(usuarioDTO,usuarioExistente);
-
-            this.usuarioRep.save(usuarioExistente);
-        }
     }
 
     @Transactional(rollbackFor = Exception.class)

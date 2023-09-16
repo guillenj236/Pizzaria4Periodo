@@ -35,13 +35,11 @@ public class EnderecoService {
     public void atualizaEndereco(EnderecoDTO enderecoDTO){
         Endereco enderecoExistente = this.enderecoRep.findById(enderecoDTO.getId()).orElse(null);
 
-        if (enderecoExistente != null) {
-
             BeanUtils.copyProperties(enderecoDTO, enderecoExistente);
 
 
             this.enderecoRep.save(enderecoExistente);
-        }
+
     }
 
     @Transactional(rollbackFor = Exception.class)

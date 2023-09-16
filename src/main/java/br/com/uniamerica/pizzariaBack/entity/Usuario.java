@@ -12,11 +12,9 @@ public class Usuario extends AbstractEntity{
     @Column (name = "nomeUsuario", length = 50, unique = true)
     private String nomeUsuario;
 
-
     @Getter @Setter
-    @Column (name = "CPF", length = 18, unique = true)
-    private String CPF;
-
+    @Column (name = "telefone", length = 15, unique = true)
+    private String telefone;
     @Getter @Setter
     @OneToMany(mappedBy = "usuario", fetch = FetchType.EAGER)
     private List<Endereco> enderecos;

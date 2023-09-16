@@ -1,6 +1,7 @@
 package br.com.uniamerica.pizzariaBack.service;
 import br.com.uniamerica.pizzariaBack.dto.LoginDTO;
 import br.com.uniamerica.pizzariaBack.entity.Login;
+import br.com.uniamerica.pizzariaBack.entity.Sabores;
 import br.com.uniamerica.pizzariaBack.repository.LoginRep;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,6 @@ public class LoginService {
 
     @Transactional(rollbackFor = Exception.class)
     public void cadastraLogin(final LoginDTO loginDTO){
-
         var login = new Login();
         BeanUtils.copyProperties(loginDTO,login);
 
@@ -26,15 +26,20 @@ public class LoginService {
         Assert.isTrue(!login.getNomeLogin().equals(""), "O nome do login não pode ser nulo");
         Assert.isTrue(!login.getSenhaLogin().equals(""),"A senha nao pode ser nula!!");
 
+        Login loginExist = loginRep.findByNomeLogin(login.getNomeLogin());
+        Assert.isTrue(loginExist == null || loginExist.equals(login), "Login já existente!!");
+
        // Assert.isTrue(!login.getUsuario().equals(""), "O usuario nao pode ser nulo");
 
         this.loginRep.save(login);
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void atualizaLogin(LoginDTO loginDTO){
+    public void atualizaLogin(Login login){
 
-        Login loginExistente = this.loginRep.findById(loginDTO.getId()).orElse(null);
+        Login loginExistente = this.loginRep.findById(login.getId()).orElse(null);
+
+        this.loginRep.save(login);
     }
 
     @Transactional(rollbackFor = Exception.class)
