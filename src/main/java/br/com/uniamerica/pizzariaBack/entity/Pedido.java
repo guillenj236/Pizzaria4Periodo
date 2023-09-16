@@ -1,6 +1,4 @@
 package br.com.uniamerica.pizzariaBack.entity;
-
-import ch.qos.logback.core.net.server.Client;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -38,6 +36,10 @@ public class Pedido extends AbstractEntity{
     @Getter @Setter
     @Column (name = "pagamentoCartao")
     private boolean pagamentoCartao;
+
+    @Getter @Setter
+    @Column (name = "pagamentoDinheiro")
+    private boolean pagamentoDinheiro;
 
     @Getter @Setter
     @ManyToOne(fetch = FetchType.EAGER)

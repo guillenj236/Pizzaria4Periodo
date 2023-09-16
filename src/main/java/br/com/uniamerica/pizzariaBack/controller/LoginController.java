@@ -54,9 +54,6 @@ public class LoginController {
             return ResponseEntity.internalServerError()
                     .body("Error: " + e.getMessage());
         }
-        catch (RuntimeException e){
-            return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
-        }
     }
 
     @DeleteMapping("/deleta/{id}")

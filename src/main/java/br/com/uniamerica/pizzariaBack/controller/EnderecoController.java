@@ -45,7 +45,7 @@ public class EnderecoController {
         try {
             final Endereco endereco1 = this.enderecoRep.findById(id).orElse(null);
 
-            if (endereco1 == null || endereco1.getId() != (enderecoDTO.getId())){
+            if (endereco1 == null || !endereco1.getId().equals(enderecoDTO.getId())){
                 return ResponseEntity.internalServerError().body("Nao foi possivel indentificar o endereco informado");
             }
             this.enderecoService.atualizaEndereco(enderecoDTO);
@@ -54,9 +54,6 @@ public class EnderecoController {
         catch (DataIntegrityViolationException e){
             return ResponseEntity.internalServerError()
                     .body("Error: " + e.getMessage());
-        }
-        catch (RuntimeException e){
-            return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
         }
     }
 

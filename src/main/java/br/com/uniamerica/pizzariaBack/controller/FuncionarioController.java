@@ -45,7 +45,7 @@ public class FuncionarioController {
         try {
             final Funcionario funcionario1 = this.funcionarioRep.findById(id).orElse(null);
 
-            if (funcionario1 == null || funcionario1.getId() != (funcionarioDTO.getId())){
+            if (funcionario1 == null || !funcionario1.getId().equals(funcionarioDTO.getId())){
                 return ResponseEntity.internalServerError().body("Nao foi possivel indentificar o registro informado");
             }
             this.funcionarioService.atualizaFuncionario(funcionarioDTO);
@@ -55,10 +55,6 @@ public class FuncionarioController {
             return ResponseEntity.internalServerError()
                     .body("Error: " + e.getMessage());
         }
-        catch (RuntimeException e){
-            return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
-        }
-
     }
 
     @DeleteMapping("/{id}")

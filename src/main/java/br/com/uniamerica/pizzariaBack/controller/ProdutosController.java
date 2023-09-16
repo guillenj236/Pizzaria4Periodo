@@ -46,7 +46,7 @@ public class ProdutosController {
         try {
             final Produtos produto1 = this.produtosRep.findById(id).orElse(null);
 
-            if (produto1 == null || produto1.getId() != (produtosDTO.getId())){
+            if (produto1 == null || !produto1.getId().equals(produtosDTO.getId())){
                 return ResponseEntity.internalServerError().body("Nao foi possivel indentificar o registro informado");
             }
             this.produtosService.atualizaProduto(produtosDTO);
@@ -55,9 +55,6 @@ public class ProdutosController {
         catch (DataIntegrityViolationException e){
             return ResponseEntity.internalServerError()
                     .body("Error: " + e.getMessage());
-        }
-        catch (RuntimeException e){
-            return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
         }
     }
 

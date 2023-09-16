@@ -1,14 +1,11 @@
 package br.com.uniamerica.pizzariaBack.dto;
-
 import br.com.uniamerica.pizzariaBack.entity.Endereco;
-import br.com.uniamerica.pizzariaBack.entity.Login;
-import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class UsuarioDTO extends AbstractDTO{
 

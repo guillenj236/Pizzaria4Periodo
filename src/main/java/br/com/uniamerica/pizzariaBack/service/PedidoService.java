@@ -1,7 +1,10 @@
 package br.com.uniamerica.pizzariaBack.service;
 
 import br.com.uniamerica.pizzariaBack.dto.PedidoDTO;
+import br.com.uniamerica.pizzariaBack.entity.EstoqueProds;
 import br.com.uniamerica.pizzariaBack.entity.Pedido;
+import br.com.uniamerica.pizzariaBack.entity.Pizza;
+import br.com.uniamerica.pizzariaBack.entity.Produtos;
 import br.com.uniamerica.pizzariaBack.repository.PedidoRep;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +23,21 @@ public class PedidoService {
         var pedido = new Pedido();
         BeanUtils.copyProperties(pedidoDTO,pedido);
 
-        if(pedido.getPizzas().size() >= 1){
-            for(int i=0;i<pedido.getPizzas().size(); i++) {
-                total += pedido.getPizzas().get(i).getPrecoPizza();
+        if (pedido.isPagamentoCartao()){
+            pedido.setPagamentoDinheiro(false);
+        }else if (pedido.isPagamentoDinheiro()){
+            pedido.setPagamentoCartao(false);
+        }
+
+        if (!pedido.getPizzas().isEmpty()) {
+            for (Pizza pizza : pedido.getPizzas()) {
+                total += pizza.getPrecoPizza();
+            }
+        }
+
+        if (!pedido.getProdutos().isEmpty()){
+            for (Produtos produtos: pedido.getProdutos()){
+                total =+ produtos.getQuantidade_prod();
             }
         }
 
@@ -51,7 +66,7 @@ public class PedidoService {
 
         final Pedido pedidoBanco = this.pedidoRep.findById(id).orElse(null);
 
-        if (pedidoBanco == null || pedidoBanco.getId()!=(id)){
+        if (pedidoBanco == null || !pedidoBanco.getId().equals(id)){
             throw new RuntimeException("Não foi possivel identificar o pedido informado.");
         }
         this.pedidoRep.delete(pedidoBanco);

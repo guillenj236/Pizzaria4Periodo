@@ -45,7 +45,7 @@ public class PedidoController {
         try {
             final Pedido pedido1 = this.pedidoRep.findById(id).orElse(null);
 
-            if (pedido1 == null || pedido1.getId() != (pedidoDTO.getId())){
+            if (pedido1 == null || !pedido1.getId().equals(pedidoDTO.getId())){
                 return ResponseEntity.internalServerError().body("Nao foi possivel indentificar o pedido informado");
             }
             this.pedidoService.atualizaPedido(pedidoDTO);
@@ -54,9 +54,6 @@ public class PedidoController {
         catch (DataIntegrityViolationException e){
             return ResponseEntity.internalServerError()
                     .body("Error: " + e.getMessage());
-        }
-        catch (RuntimeException e){
-            return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
         }
 
     }

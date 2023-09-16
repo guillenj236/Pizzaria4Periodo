@@ -46,18 +46,15 @@ public class PizzaController {
         try {
             final Pizza pizza1 = this.pizzaRep.findById(id).orElse(null);
 
-            if (pizza1 == null || pizza1.getId() != (pizzaDTO.getId())){
+            if (pizza1 == null || !pizza1.getId().equals(pizzaDTO.getId())){
                 return ResponseEntity.internalServerError().body("Nao foi possivel indentificar a pizza informado");
             }
-          ////  this.pizzaService.atualizPizza(pizza);
+          this.pizzaService.atualizPizza(pizzaDTO);
             return ResponseEntity.ok("pizza EDITADA com Sucesso");
         }
         catch (DataIntegrityViolationException e){
             return ResponseEntity.internalServerError()
                     .body("Error: " + e.getMessage());
-        }
-        catch (RuntimeException e){
-            return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
         }
     }
 

@@ -21,6 +21,8 @@ public class PizzaService {
         var pizza = new Pizza();
         BeanUtils.copyProperties(pizzaDTO,pizza);
 
+        float total;
+
         Assert.isTrue(pizza.getSabores() != null, "Selecione ao menos um sabor na pizza!!");
         Assert.isTrue(pizza.getQuantidadePizza() != 0,"Adicione a quantidade de pizzas");
 
@@ -44,6 +46,9 @@ public class PizzaService {
             Assert.isTrue(pizza.getSabores().size() >= 1 && pizza.getSabores().size() <= 4,"Este tamanho tem de 1 a 4 sabores!!");
             pizza.setPrecoPizza(55);
         }
+
+        total = pizza.getPrecoPizza() * pizza.getQuantidadePizza();
+        pizza.setPrecoPizza(total);
 
         this.pizzaRep.save(pizza);
     }
@@ -69,7 +74,7 @@ public class PizzaService {
 
         final Pizza pizzaBanco = this.pizzaRep.findById(id).orElse(null);
 
-        if (pizzaBanco == null || pizzaBanco.getId()!=(id)){
+        if (pizzaBanco == null || !pizzaBanco.getId().equals(id)){
             throw new RuntimeException("Não foi possivel identificar o pizza informado.");
         }
         this.pizzaRep.delete(pizzaBanco);

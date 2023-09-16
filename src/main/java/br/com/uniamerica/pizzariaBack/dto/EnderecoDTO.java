@@ -1,6 +1,4 @@
 package br.com.uniamerica.pizzariaBack.dto;
-
-import br.com.uniamerica.pizzariaBack.entity.Endereco;
 import br.com.uniamerica.pizzariaBack.entity.Usuario;
 import lombok.Data;
 

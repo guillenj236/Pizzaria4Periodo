@@ -3,7 +3,6 @@ import br.com.uniamerica.pizzariaBack.dto.UsuarioDTO;
 import br.com.uniamerica.pizzariaBack.entity.Usuario;
 import br.com.uniamerica.pizzariaBack.repository.UsuarioRep;
 import br.com.uniamerica.pizzariaBack.service.UsuarioService;
-import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
@@ -59,9 +58,6 @@ public class UsuarioController {
         catch (DataIntegrityViolationException e){
             return ResponseEntity.internalServerError()
                     .body("Error: " + e.getMessage());
-        }
-        catch (RuntimeException e){
-            return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
         }
     }
 
