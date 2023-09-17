@@ -28,6 +28,17 @@ public class PedidoController {
         return ResponseEntity.ok(this.pedidoRep.findAll());
     }
 
+    @GetMapping ("/comanda/{id}")
+    public ResponseEntity <?> findById (@PathVariable ("id") Long id){
+        try {
+            Pedido pedido = pedidoRep.getById(id);
+            pedidoService.comandaPedido(pedido);
+            return ResponseEntity.ok("comanda gerada com sucesso");
+        }catch (Exception e){
+            return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
+        }
+    }
+
     @PostMapping
     public ResponseEntity <?> cadastrarPedido(@RequestBody final PedidoDTO pedidoDTO){
         try {
