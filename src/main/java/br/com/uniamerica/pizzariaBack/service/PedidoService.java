@@ -159,7 +159,25 @@ public class PedidoService {
         }
     }
 
-    public Long getPedidosPorData(LocalDate data) {
+    public Long TotalPedidosPorData(LocalDate data) {
         return pedidoRep.PedidosPorData(data);
+    }
+    public Long TotalPagamentoCartao(LocalDate data) {
+        return pedidoRep.TotalPedidosCartao(data);
+    }
+    public Long TotalPagamentoDinheiro(LocalDate data) {
+        return pedidoRep.TotalPedidosDinheiro(data);
+    }
+    public Long TotalPedidosDelivery(LocalDate data) {
+        return pedidoRep.PedidosDelivery(data);
+    }
+    public Long TotalPedidosBalcao(LocalDate data) {
+        return pedidoRep.TotalPedidosBalcao(data);
+    }
+    public Long TotalPagos(LocalDate data) {
+        return pedidoRep.TotalPagos(data);
+    }
+    public Long TotalCancelados(LocalDate data) {
+        return pedidoRep.TotalCancelados(data);
     }
 }

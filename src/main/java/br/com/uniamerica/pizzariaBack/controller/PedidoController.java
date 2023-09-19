@@ -1,5 +1,6 @@
 package br.com.uniamerica.pizzariaBack.controller;
 import br.com.uniamerica.pizzariaBack.dto.PedidoDTO;
+import br.com.uniamerica.pizzariaBack.dto.RelatorioDiaDTO;
 import br.com.uniamerica.pizzariaBack.entity.Pedido;
 import br.com.uniamerica.pizzariaBack.repository.PedidoRep;
 import br.com.uniamerica.pizzariaBack.service.PedidoService;
@@ -53,8 +54,26 @@ public class PedidoController {
     }
 
     @GetMapping("/totaldia")
-    public Long getTotalPedidosPorData(@RequestParam("data") LocalDate data) {
-        return pedidoService.getPedidosPorData(data);
+    public RelatorioDiaDTO getTotalPedidosPorData(@RequestParam("data") LocalDate data){
+        Long totalPedidos = pedidoService.TotalPedidosPorData(data);
+        Long totalPedidosCartao = pedidoService.TotalPagamentoCartao(data);
+        Long totalPedidosDinheiro = pedidoService.TotalPagamentoDinheiro(data);
+        Long totalPedidosDelivery = pedidoService.TotalPedidosDelivery(data);
+        Long totalPedidosBalcao = pedidoService.TotalPedidosBalcao(data);
+        Long totalPedidosPagos = pedidoService.TotalPagos(data);
+        Long totalPedidosCancelados = pedidoService.TotalCancelados(data);
+
+        RelatorioDiaDTO relatorioDiaDTO = new RelatorioDiaDTO();
+        relatorioDiaDTO.setTotalPedidos(totalPedidos);
+        relatorioDiaDTO.setTotalPedidosCartao(totalPedidosCartao);
+        relatorioDiaDTO.setTotalPedidosDinheiro(totalPedidosDinheiro);
+        relatorioDiaDTO.setTotalPedidosDelivery(totalPedidosDelivery);
+        relatorioDiaDTO.setTotalPedidosBalcao(totalPedidosBalcao);
+        relatorioDiaDTO.setTotalPedidosPagos(totalPedidosPagos);
+        relatorioDiaDTO.setTotalPedidosCancelados(totalPedidosCancelados);
+
+
+        return relatorioDiaDTO;
     }
 
     @PostMapping
