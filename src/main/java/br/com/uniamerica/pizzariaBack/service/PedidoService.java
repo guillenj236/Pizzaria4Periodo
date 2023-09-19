@@ -31,6 +31,7 @@ public class PedidoService {
     @Transactional(rollbackFor = Exception.class)
     public void cadastraPedido(final PedidoDTO pedidoDTO){
         float total = 0;
+        float totalProdutos = 0;
         var pedido = new Pedido();
         BeanUtils.copyProperties(pedidoDTO,pedido);
 
@@ -55,12 +56,13 @@ public class PedidoService {
         if (pedido.getProdutos() != null && !pedido.getProdutos().isEmpty()){
             for (Produtos produtos: pedido.getProdutos()){
 
-                Optional<EstoqueProds> produtoTemp = estoqueProdRep.findById(produtos.getId());
-                total += produtoTemp.get().getPrecoProdutos();
+                Optional<Produtos> produtoTemp = produtosRep.findById(produtos.getId());
+                total += produtoTemp.get().getTotalprod();
+                System.out.println(totalProdutos);
             }
         }
 
-        pedido.setPedido_preco(total);
+        pedido.setPedido_preco(total+totalProdutos);
 
         pedido.setStatus(Status.ATIVO);
 
