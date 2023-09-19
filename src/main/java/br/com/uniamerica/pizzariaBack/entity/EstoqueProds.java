@@ -15,6 +15,6 @@ public class EstoqueProds extends AbstractEntity{
     private float precoProdutos ;
 
     @Getter @Setter
-    @Column (name = "nomeProduto", nullable = false, length = 40)
+    @Column (name = "nomeProduto", nullable = false, length = 40, unique = true)
     private String nomeProduto;
 }

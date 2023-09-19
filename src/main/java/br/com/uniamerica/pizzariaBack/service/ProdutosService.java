@@ -1,8 +1,10 @@
 package br.com.uniamerica.pizzariaBack.service;
 
 import br.com.uniamerica.pizzariaBack.dto.ProdutosDTO;
+import br.com.uniamerica.pizzariaBack.entity.EstoqueProds;
 import br.com.uniamerica.pizzariaBack.entity.Produtos;
 import br.com.uniamerica.pizzariaBack.entity.Sabores;
+import br.com.uniamerica.pizzariaBack.repository.EstoqueProdRep;
 import br.com.uniamerica.pizzariaBack.repository.ProdutosRep;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,21 +12,31 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.util.Optional;
+
 @Service
 public class ProdutosService {
 
     @Autowired
     ProdutosRep produtosRep;
+    @Autowired
+    private EstoqueProdRep estoqueProdRep;
 
     @Transactional(rollbackFor = Exception.class)
     public void cadastrarProduto (final ProdutosDTO produtosDTO){
 
+        float total = 0;
         var produtos = new Produtos();
         BeanUtils.copyProperties(produtosDTO,produtos);
 
         Assert.isTrue(produtos.getQuantidade_prod() != 0, "A quantidade do produto não pode ser nula!!");
-
         Assert.isTrue(produtos.getEstoqueProds() != null, "O Produto não pode ser nulo!!");
+
+        EstoqueProds estoqueProds = produtos.getEstoqueProds();
+        Optional <EstoqueProds> estoqueTemp = estoqueProdRep.findById(estoqueProds.getId());
+        total += estoqueTemp.get().getPrecoProdutos() * produtos.getQuantidade_prod();
+
+        produtos.setTotalprod(total);
 
         this.produtosRep.save(produtos);
     }

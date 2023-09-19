@@ -8,6 +8,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+
 @RestController
 @RequestMapping(value = "/api/pedido")
 public class PedidoController {
@@ -39,6 +41,11 @@ public class PedidoController {
         }
     }
 
+    @GetMapping("/totaldia")
+    public Long getTotalPedidosPorData(@RequestParam("data") LocalDate data) {
+        return pedidoService.getPedidosPorData(data);
+    }
+
     @PostMapping
     public ResponseEntity <?> cadastrarPedido(@RequestBody final PedidoDTO pedidoDTO){
         try {
@@ -52,7 +59,6 @@ public class PedidoController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> editaPedido(@PathVariable("id") final Long id, @RequestBody final PedidoDTO pedidoDTO){
-
         try {
             final Pedido pedido1 = this.pedidoRep.findById(id).orElse(null);
 
@@ -66,7 +72,23 @@ public class PedidoController {
             return ResponseEntity.internalServerError()
                     .body("Error: " + e.getMessage());
         }
+    }
 
+    @PutMapping("/finalizaPed/{id}")
+    public ResponseEntity<?> finalizaPedido(@PathVariable ("id") final Long id, @RequestBody final Pedido pedido){
+        try {
+            final Pedido pedido1 = this.pedidoRep.findById(id).orElse(null);
+
+            if (pedido1 == null || !pedido1.getId().equals(pedido.getId())){
+                return ResponseEntity.internalServerError().body("Nao foi posivel identificar o pedido informado");
+            }
+            this.pedidoService.FinalizaPedido(pedido);
+            return ResponseEntity.ok("PEDIDO FINALIZADO");
+        }
+        catch (DataIntegrityViolationException e){
+            return ResponseEntity.internalServerError()
+                    .body("Error: " + e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")

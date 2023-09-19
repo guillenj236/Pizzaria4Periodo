@@ -3,6 +3,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -22,11 +23,11 @@ public class Pedido extends AbstractEntity{
 
     @Getter @Setter
     @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "pizza_id")
+    @JoinColumn(name = "pedido_id")
     private List<Pizza> pizzas;
 
     @Getter @Setter
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "produtos")
     private List<Produtos> produtos;
 
@@ -61,16 +62,16 @@ public class Pedido extends AbstractEntity{
 
     @Getter @Setter
     @Column (name = "dataPedido")
-    private LocalDateTime dataPedido;
+    private LocalDate dataPedido;
 
     @Getter @Setter
-    @Column(name = "delivery",nullable = false)
+    @Column(name = "delivery")
     private boolean delivery;
 
 
     @PrePersist
     private void prePersist(){
-        this.cadastro = LocalDateTime.now();
+        this.dataPedido = LocalDate.now ();
     }
 
 }

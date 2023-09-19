@@ -3,7 +3,7 @@ package br.com.uniamerica.pizzariaBack.dto;
 import br.com.uniamerica.pizzariaBack.entity.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -20,6 +20,6 @@ public class PedidoDTO extends AbstractDTO{
     private Funcionario funcionario;
     private String observacao;
     private Usuario usuario;
-
-    private LocalDateTime dataPedido;
+    private boolean delivery;
+    private LocalDate dataPedido;
 }

@@ -33,7 +33,6 @@ public class ProdutosController {
     public ResponseEntity <?> cadastrarProdutos(@RequestBody final ProdutosDTO produtosDTO){
         try {
            produtosService.cadastrarProduto(produtosDTO);
-
             return ResponseEntity.ok("Produto feito com sucesso");
         }
         catch (Exception e){

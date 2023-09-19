@@ -25,12 +25,19 @@ public class EstoqueProdsService {
         Assert.isTrue(!estoque.getNomeProduto().equals(""),"o nome do produto não pode ser nulo!!");
         Assert.isTrue(estoque.getNomeProduto().length() <= 40, "Máximo de caracteres alcançados!! (40)");
 
+        EstoqueProds estoqueExistente = estoqueProdRep.findByNomeProduto(estoque.getNomeProduto());
+        Assert.isTrue( estoqueExistente == null || estoqueExistente.equals(estoque), "Produto já existente!");
+
         this.estoqueProdRep.save(estoque);
 
     }
 
     public void atualizaEstoque (EstoqueProds estoqueProds){
         final EstoqueProds estoqueAtt=this.estoqueProdRep.findById(estoqueProds.getId()).orElse(null);
+
+        if (estoqueAtt == null) throw new AssertionError();
+        Assert.isTrue(!estoqueAtt.getNomeProduto().equals(""),"o nome do produto não pode ser nulo!!");
+        Assert.isTrue(estoqueAtt.getNomeProduto().length() <= 40, "Máximo de caracteres alcançados!! (40)");
 
         this.estoqueProdRep.save(estoqueProds);
 

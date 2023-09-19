@@ -1,7 +1,10 @@
 package br.com.uniamerica.pizzariaBack.service;
 import br.com.uniamerica.pizzariaBack.dto.PedidoDTO;
 import br.com.uniamerica.pizzariaBack.entity.*;
+import br.com.uniamerica.pizzariaBack.repository.EstoqueProdRep;
 import br.com.uniamerica.pizzariaBack.repository.PedidoRep;
+import br.com.uniamerica.pizzariaBack.repository.PizzaRep;
+import br.com.uniamerica.pizzariaBack.repository.ProdutosRep;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,18 +13,28 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.Optional;
 
 @Service
 public class PedidoService {
 
     @Autowired
     private PedidoRep pedidoRep;
+    @Autowired
+    private PizzaRep pizzaRep;
+    @Autowired
+    private ProdutosRep produtosRep;
+    @Autowired
+    private EstoqueProdRep estoqueProdRep;
 
     @Transactional(rollbackFor = Exception.class)
     public void cadastraPedido(final PedidoDTO pedidoDTO){
         float total = 0;
         var pedido = new Pedido();
         BeanUtils.copyProperties(pedidoDTO,pedido);
+
+        System.out.println(pedido.getPizzas().size());
 
         if (pedido.isPagamentoCartao()){
             pedido.setPagamentoDinheiro(false);
@@ -31,27 +44,25 @@ public class PedidoService {
 
         if (pedido.getPizzas() != null && !pedido.getPizzas().isEmpty()) {
             for (Pizza pizza : pedido.getPizzas()) {
-                total += pizza.getPrecoPizza();
+
+                Optional<Pizza> pizzaTemp = pizzaRep.findById(pizza.getId());
+                total += pizzaTemp.get().getPrecoPizza();
                 System.out.println("Pizza ID: " + pizza.getId()); // Adicione este log
                 System.out.println("Preço da Pizza: " + pizza.getPrecoPizza()); // Adicione este log
-                System.out.println("Total parcial: " + total);
             }
         }
 
-        /*
-        if (!pedido.getProdutos().isEmpty()){
+        if (pedido.getProdutos() != null && !pedido.getProdutos().isEmpty()){
             for (Produtos produtos: pedido.getProdutos()){
-                total += produtos.getQuantidade_prod();
+
+                Optional<EstoqueProds> produtoTemp = estoqueProdRep.findById(produtos.getId());
+                total += produtoTemp.get().getPrecoProdutos();
             }
         }
-         */
-
-        System.out.println("Total antes: " + total);
 
         pedido.setPedido_preco(total);
 
-        System.out.println("Total depois: " + total);
-
+        pedido.setStatus(Status.ATIVO);
 
         this.pedidoRep.save(pedido);
     }
@@ -65,9 +76,27 @@ public class PedidoService {
 
             BeanUtils.copyProperties(pedidoDTO, pedidoExistente);
 
-
+            if (pedidoDTO.isDelivery()){
+                pedidoExistente.setStatus(Status.A_CAMINHO);
+            }else {
+                pedidoExistente.setStatus(Status.BALCAO);
+                System.out.println("POR GENTILEZA RETIRAR NO BALCAO");
+            }
             this.pedidoRep.save(pedidoExistente);
         }
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void FinalizaPedido (Pedido pedido){
+
+        Pedido pedidoFinal = this.pedidoRep.findById(pedido.getId()).orElse(null);
+
+        if (pedido.isEntrega()){
+            pedidoFinal.setStatus(Status.ENTREGUE);
+        }else {
+            pedidoFinal.setStatus(Status.CANCELADO);
+        }
+
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -88,26 +117,30 @@ public class PedidoService {
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(arquivo))) {
 
-
             writer.write("Cliente: " + pedido.getUsuario().getNomeUsuario() + "\n");
             writer.write("Telefone: " + pedido.getUsuario().getTelefone() + "\n");
 
             for (Endereco endereco : pedido.getUsuario().getEnderecos()){
+                writer.write("Num da Casa: " + endereco.getNumeroEnd() + "\n");
                 writer.write("Nome da rua: " + endereco.getRua() + "\n");
                 writer.write("Nome do Bairro: " + endereco.getBairro() + "\n");
             }
-
             for (Pizza pizza : pedido.getPizzas()){
                 writer.write("Tamanho da pizza: " + pizza.getTamanho() + "\n");
                 for (Sabores sabores : pizza.getSabores()){
-                    writer.write("Sabor da pizza: " + sabores.getSaborPizza());
+                    writer.write("Sabor da pizza: " + sabores.getSaborPizza() + "\n");
                 }
             }
+            writer.write("Observacoes: " + pedido.getObservacao());
 
 
 
         }catch (IOException e) {
             System.out.println("Erro ao salvar o arquivo: " + e.getMessage() + "\n");
         }
+    }
+
+    public Long getPedidosPorData(LocalDate data) {
+        return pedidoRep.PedidosPorData(data);
     }
 }

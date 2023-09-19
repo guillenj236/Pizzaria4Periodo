@@ -9,9 +9,7 @@ import java.util.List;
 @Data
 public class ProdutosDTO extends AbstractDTO{
 
-
     private int quantidade_prod;
-
-
-    private List<EstoqueProds> estoqueProds;
+    private float totalprod;
+    private EstoqueProds estoqueProds;
 }
