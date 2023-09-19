@@ -25,8 +25,6 @@ public class PedidoService {
     private PizzaRep pizzaRep;
     @Autowired
     private ProdutosRep produtosRep;
-    @Autowired
-    private EstoqueProdRep estoqueProdRep;
 
     @Transactional(rollbackFor = Exception.class)
     public void cadastraPedido(final PedidoDTO pedidoDTO){
@@ -48,8 +46,8 @@ public class PedidoService {
 
                 Optional<Pizza> pizzaTemp = pizzaRep.findById(pizza.getId());
                 total += pizzaTemp.get().getPrecoPizza();
-                System.out.println("Pizza ID: " + pizza.getId()); // Adicione este log
-                System.out.println("Preço da Pizza: " + pizza.getPrecoPizza()); // Adicione este log
+                System.out.println("Pizza ID: " + pizza.getId());
+                System.out.println("Preço da Pizza: " + pizza.getPrecoPizza());
             }
         }
 
@@ -67,6 +65,7 @@ public class PedidoService {
         pedido.setStatus(Status.ATIVO);
 
         this.pedidoRep.save(pedido);
+
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -134,8 +133,26 @@ public class PedidoService {
                 }
             }
             writer.write("Observacoes: " + pedido.getObservacao());
+        }catch (IOException e) {
+            System.out.println("Erro ao salvar o arquivo: " + e.getMessage() + "\n");
+        }
+    }
 
+    @Transactional (rollbackFor = Exception.class)
+    public void comandaCozinha( Pedido pedido){
+        String pasta = "C:\\Users\\falco\\Documents\\Desenvolvimento\\pizzariaBack\\ComandasPizza\\";
+        String arquivo = pasta + "para_cozinha_" + "pedido_" + pedido.getId() + ".txt";
 
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(arquivo))){
+            writer.write("Cliente: " + pedido.getUsuario().getNomeUsuario() + "\n");
+
+            for (Pizza pizza : pedido.getPizzas()){
+                writer.write("Tamanho da pizza: " + pizza.getTamanho() + "\n");
+                for (Sabores sabores : pizza.getSabores()){
+                    writer.write("Sabor da pizza: " + sabores.getSaborPizza() + "\n");
+                }
+            }
+            writer.write("Observacoes: " + pedido.getObservacao());
 
         }catch (IOException e) {
             System.out.println("Erro ao salvar o arquivo: " + e.getMessage() + "\n");

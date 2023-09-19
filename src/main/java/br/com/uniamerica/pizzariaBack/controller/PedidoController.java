@@ -41,6 +41,17 @@ public class PedidoController {
         }
     }
 
+    @GetMapping ("/cozinha/{id}")
+    public ResponseEntity <?> comandaDeCria (@PathVariable ("id") Long id){
+        try {
+            Pedido pedido = pedidoRep.getById(id);
+            pedidoService.comandaCozinha(pedido);
+            return ResponseEntity.ok("comanda gerada para cozinha com sucesso!!");
+        } catch (Exception e){
+            return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
+        }
+    }
+
     @GetMapping("/totaldia")
     public Long getTotalPedidosPorData(@RequestParam("data") LocalDate data) {
         return pedidoService.getPedidosPorData(data);
