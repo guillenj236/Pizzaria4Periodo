@@ -7,4 +7,8 @@ import lombok.EqualsAndHashCode;
 public class FuncionarioDTO extends AbstractDTO {
 
     private String nomeFunc;
+
+    public FuncionarioDTO(String nomeFunc) {
+        this.nomeFunc = nomeFunc;
+    }
 }

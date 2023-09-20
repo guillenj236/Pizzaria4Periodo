@@ -1,17 +1,8 @@
 package br.com.uniamerica.pizzariaBack;
-import br.com.uniamerica.pizzariaBack.controller.EnderecoController;
-import br.com.uniamerica.pizzariaBack.controller.LoginController;
-import br.com.uniamerica.pizzariaBack.controller.SaboresController;
-import br.com.uniamerica.pizzariaBack.controller.UsuarioController;
+import br.com.uniamerica.pizzariaBack.controller.*;
 import br.com.uniamerica.pizzariaBack.dto.*;
-import br.com.uniamerica.pizzariaBack.entity.Endereco;
-import br.com.uniamerica.pizzariaBack.entity.Login;
-import br.com.uniamerica.pizzariaBack.entity.Sabores;
-import br.com.uniamerica.pizzariaBack.entity.Usuario;
-import br.com.uniamerica.pizzariaBack.repository.EnderecoRep;
-import br.com.uniamerica.pizzariaBack.repository.LoginRep;
-import br.com.uniamerica.pizzariaBack.repository.SaboresRep;
-import br.com.uniamerica.pizzariaBack.repository.UsuarioRep;
+import br.com.uniamerica.pizzariaBack.entity.*;
+import br.com.uniamerica.pizzariaBack.repository.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,9 +10,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.junit.Assert;
 import org.springframework.http.ResponseEntity;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -40,6 +29,12 @@ class PizzariaBackApplicationTests {
 	@Autowired
 	EnderecoController enderecoController = new EnderecoController();
 	private List<Endereco> enderecoList;
+
+	@MockBean
+	FuncionarioRep funcionarioRep;
+	@Autowired
+	FuncionarioController funcionarioController = new FuncionarioController();
+	private List<Funcionario> funcionarioList;
 
 	@MockBean
 	SaboresRep saboresRep;
@@ -91,6 +86,18 @@ class PizzariaBackApplicationTests {
 		Mockito.when(loginRep.findById(1L)).thenReturn(Optional.of(login));
 		Mockito.when(loginRep.findById(2L)).thenReturn(Optional.of(login2));
 		Mockito.when(loginRep.findAll()).thenReturn(loginList);
+
+		Funcionario funcionario = new Funcionario(1L,"David");
+		Funcionario funcionario2 = new Funcionario(2L,"PAINHO");
+		funcionarioList = new ArrayList<>();
+		funcionarioList.add(funcionario);
+		funcionarioList.add(funcionario2);
+
+		Mockito.when(funcionarioRep.save(funcionario)).thenReturn(funcionario);
+		Mockito.when(funcionarioRep.save(funcionario2)).thenReturn(funcionario2);
+		Mockito.when(funcionarioRep.findById(1L)).thenReturn(Optional.of(funcionario));
+		Mockito.when(funcionarioRep.findById(2L)).thenReturn(Optional.of(funcionario2));
+		Mockito.when(funcionarioRep.findAll()).thenReturn(funcionarioList);
 	}
 
 	@Test
@@ -146,6 +153,55 @@ class PizzariaBackApplicationTests {
 		enderecoController.cadastrarEndereco(new EnderecoDTO("RuaTOMA","BairroTOMA",530,usuario));
 		var endereco = enderecoController.findByIdPath(1L);
 		Assertions.assertEquals(endereco.getBody().getRua(), enderecoController.findByIdPath(1L).getBody().getRua());
+	}
 
+	@Test
+	void testFindAllEndereco(){
+		ResponseEntity<List<Endereco>> enderecoFuncaoController = enderecoController.ListaEnderecos();
+		List<Endereco> enderecoListaController = enderecoFuncaoController.getBody();
+
+		Assertions.assertNotNull(enderecoListaController);
+		for (int i = 0; i< enderecoList.size(); i ++){
+			Assertions.assertEquals(enderecoList.get(i), enderecoListaController.get(i));
+		}
+	}
+
+	@Test
+	void testCriaFuncionario(){
+		var funcionario = funcionarioController.cadastrarFuncionario(new FuncionarioDTO("Morador"));
+		Assertions.assertEquals("Registro cadastrado com sucesso",funcionario.getBody());
+	}
+
+	@Test
+	void testPUTfuncionario(){
+		FuncionarioDTO funcionarioDTO = new FuncionarioDTO("FuncionarioPUT");
+		funcionarioDTO.setId(1L);
+
+		var funcionario = funcionarioController.editaFunc(1L, funcionarioDTO);
+		Assertions.assertEquals("Registro EDITADO com Sucesso", funcionario.getBody());
+	}
+
+	@Test
+	void testDELETEfunc(){
+		var funcionarioDelete = funcionarioController.deletaFuncionario(1L);
+		Assertions.assertEquals("Funcionário excluído",funcionarioDelete.getBody());
+	}
+
+	@Test
+	void testFindByIdFuncionario(){
+		funcionarioController.cadastrarFuncionario(new FuncionarioDTO("Ichigo"));
+		var funcionario = funcionarioController.findByIdPath(1L);
+		Assertions.assertEquals(funcionario.getBody().getNomeFunc(), funcionarioController.findByIdPath(1L).getBody().getNomeFunc());
+	}
+
+	@Test
+	void testFindAllFuncionario(){
+		ResponseEntity<List<Funcionario>> funcionarioFuncaoController = funcionarioController.ListaFuncionarios();
+		List<Funcionario> funcionariosListController = funcionarioFuncaoController.getBody();
+
+		Assertions.assertNotNull(funcionariosListController);
+		for (int i = 0; i<funcionarioList.size(); i++){
+			Assertions.assertEquals(funcionarioList.get(i), funcionariosListController.get(i));
+		}
 	}
 }

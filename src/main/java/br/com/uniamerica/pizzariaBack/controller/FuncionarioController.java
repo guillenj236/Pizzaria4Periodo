@@ -8,6 +8,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(value = "/api/funcionario")
 public class FuncionarioController {
@@ -19,18 +21,18 @@ public class FuncionarioController {
     private FuncionarioService funcionarioService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> findByIdPath(@PathVariable("id") final Long id){
+    public ResponseEntity<Funcionario> findByIdPath(@PathVariable("id") final Long id){
         final Funcionario funcionario = this.funcionarioRep.findById(id).orElse(null);
         return ResponseEntity.ok(funcionario);
     }
     @GetMapping("/lista")
-    public ResponseEntity <?> ListaSabores(){
+    public ResponseEntity <List<Funcionario>> ListaFuncionarios(){
         return ResponseEntity.ok(this.funcionarioRep.findAll());
     }
 
 
     @PostMapping
-    public ResponseEntity <?> cadastrarFuncionario(@RequestBody final FuncionarioDTO funcionarioDTO){
+    public ResponseEntity <String> cadastrarFuncionario(@RequestBody final FuncionarioDTO funcionarioDTO){
         try {
             funcionarioService.cadastrarFuncionario(funcionarioDTO);
             return ResponseEntity.ok("Registro cadastrado com sucesso");
@@ -41,7 +43,7 @@ public class FuncionarioController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> editaFunc(@PathVariable ("id") final Long id, @RequestBody final FuncionarioDTO funcionarioDTO){
+    public ResponseEntity<String> editaFunc(@PathVariable ("id") final Long id, @RequestBody final FuncionarioDTO funcionarioDTO){
         try {
             final Funcionario funcionario1 = this.funcionarioRep.findById(id).orElse(null);
 
@@ -58,7 +60,7 @@ public class FuncionarioController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deletaFuncionario(@PathVariable Long id) {
+    public ResponseEntity<String> deletaFuncionario(@PathVariable Long id) {
         try {
 
             this.funcionarioService.excluirFuncionario(id);

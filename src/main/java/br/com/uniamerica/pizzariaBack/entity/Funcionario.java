@@ -16,7 +16,8 @@ public class Funcionario extends AbstractEntity{
 
     public Funcionario(){}
 
-    public Funcionario(String nomeFunc) {
+    public Funcionario(Long id, String nomeFunc) {
+        this.id = id;
         this.nomeFunc = nomeFunc;
     }
 }
