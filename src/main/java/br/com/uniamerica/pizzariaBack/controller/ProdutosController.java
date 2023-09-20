@@ -9,6 +9,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(value = "/api/produtos")
 public class ProdutosController {
@@ -20,17 +22,17 @@ public class ProdutosController {
     ProdutosService produtosService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> findByIdPath(@PathVariable("id") final Long id){
+    public ResponseEntity<Produtos> findByIdPath(@PathVariable("id") final Long id){
         final Produtos produtos = this.produtosRep.findById(id).orElse(null);
         return ResponseEntity.ok(produtos);
     }
     @GetMapping("/lista")
-    public ResponseEntity <?> ListaSabores(){
+    public ResponseEntity <List<Produtos>> listaProdutos(){
         return ResponseEntity.ok(this.produtosRep.findAll());
     }
 
     @PostMapping
-    public ResponseEntity <?> cadastrarProdutos(@RequestBody final ProdutosDTO produtosDTO){
+    public ResponseEntity <String> cadastrarProdutos(@RequestBody final ProdutosDTO produtosDTO){
         try {
            produtosService.cadastrarProduto(produtosDTO);
             return ResponseEntity.ok("Produto feito com sucesso");
@@ -41,7 +43,7 @@ public class ProdutosController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> edita(@PathVariable("id") final Long id, @RequestBody final ProdutosDTO produtosDTO){
+    public ResponseEntity<String> edita(@PathVariable("id") final Long id, @RequestBody final ProdutosDTO produtosDTO){
         try {
             final Produtos produto1 = this.produtosRep.findById(id).orElse(null);
 
@@ -58,7 +60,7 @@ public class ProdutosController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deletaProdutos(@PathVariable Long id) {
+    public ResponseEntity<String> deletaProdutos(@PathVariable Long id) {
         try {
 
             this.produtosService.excluirProduto(id);

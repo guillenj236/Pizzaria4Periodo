@@ -23,7 +23,8 @@ public class Produtos extends AbstractEntity{
     public Produtos(){
 
     }
-    public Produtos(int quantidade_prod, float totalprod, EstoqueProds estoqueProds) {
+    public Produtos(Long id,int quantidade_prod, float totalprod, EstoqueProds estoqueProds) {
+        this.id = id;
         this.quantidade_prod = quantidade_prod;
         this.totalprod = totalprod;
         this.estoqueProds = estoqueProds;

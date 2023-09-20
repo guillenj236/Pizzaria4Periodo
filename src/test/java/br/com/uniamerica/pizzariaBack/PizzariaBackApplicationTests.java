@@ -61,6 +61,12 @@ class PizzariaBackApplicationTests {
 	PizzaController pizzaController = new PizzaController();
 	private List<Pizza> pizzaList;
 
+	@MockBean
+	ProdutosRep produtosRep;
+	@Autowired
+	ProdutosController produtosController;
+	private List<Produtos> produtosList;
+
 
 	@BeforeEach
 	void injectData(){
@@ -149,6 +155,18 @@ class PizzariaBackApplicationTests {
 		Mockito.when(pizzaRep.findById(1L)).thenReturn(Optional.of(pizza));
 		Mockito.when(pizzaRep.findById(2L)).thenReturn(Optional.of(pizza2));
 		Mockito.when(pizzaRep.findAll()).thenReturn(pizzaList);
+
+		Produtos produtos = new Produtos(1L, 1,20,estoqueProds);
+		Produtos produtos2 = new Produtos(2L, 10, 100, estoqueProds2);
+		produtosList = new ArrayList<>();
+		produtosList.add(produtos);
+		produtosList.add(produtos2);
+
+		Mockito.when(produtosRep.save(produtos)).thenReturn(produtos);
+		Mockito.when(produtosRep.save(produtos2)).thenReturn(produtos2);
+		Mockito.when(produtosRep.findById(1L)).thenReturn(Optional.of(produtos));
+		Mockito.when(produtosRep.findById(2L)).thenReturn(Optional.of(produtos2));
+		Mockito.when(produtosRep.findAll()).thenReturn(produtosList);
 	}
 	@Test
 	void testCriaUser(){
@@ -272,7 +290,7 @@ class PizzariaBackApplicationTests {
 	void testFindByIdEstoque(){
 		estoqueProdsController.cadastrarEstoque(new EstoqueDTO(4,"Danone"));
 		var estoque = estoqueProdsController.findByIdPath(1L);
-		Assertions.assertEquals(estoque.getBody().getNomeProduto(), estoqueProdsController.findByIdPath(1L).getBody().getNomeProduto());
+		Assertions.assertEquals(Objects.requireNonNull(estoque.getBody()).getNomeProduto(), estoqueProdsController.findByIdPath(1L).getBody().getNomeProduto());
 	}
 
 	@Test
@@ -302,7 +320,7 @@ class PizzariaBackApplicationTests {
 	void FindByIdSabores(){
 		saboresController.cadastrarSabores(new SaboresDTO("PizzaID"));
 		var sabor = saboresController.findByIdPath(1L);
-		Assertions.assertEquals(sabor.getBody().getSaborPizza(), saboresController.findByIdPath(1L).getBody().getSaborPizza());
+		Assertions.assertEquals(Objects.requireNonNull(sabor.getBody()).getSaborPizza(), saboresController.findByIdPath(1L).getBody().getSaborPizza());
 	}
 
 	@Test
@@ -320,20 +338,17 @@ class PizzariaBackApplicationTests {
 		var login = loginController.cadastrarLogin(new LoginDTO("loginTeste", "senhaTeste"));
 		Assertions.assertEquals("Login cadastrado com sucesso", login.getBody());
 	}
-
 	@Test
 	void testDELETElogin(){
 		var login = loginController.deleta(2L);
 		Assertions.assertEquals("Login Excluído com sucesso!!!", login.getBody());
 	}
-
 	@Test
 	void testFindByIdLogin(){
 		loginController.cadastrarLogin(new LoginDTO("teste","teste"));
 		var login = loginController.findByIdPath(1L);
-		Assertions.assertEquals(login.getBody().getNomeLogin(), loginController.findByIdPath(1L).getBody().getNomeLogin());
+		Assertions.assertEquals(Objects.requireNonNull(login.getBody()).getNomeLogin(), loginController.findByIdPath(1L).getBody().getNomeLogin());
 	}
-
 	@Test
 	void testFindAllLogin(){
 		ResponseEntity<List<Login>> loginFuncaoController = loginController.ListaLogin();
@@ -344,4 +359,80 @@ class PizzariaBackApplicationTests {
 			Assertions.assertEquals(loginList.get(i), loginListController.get(i));
 		}
 	}
+
+	@Test
+	void testCriarPizza(){
+		var pizza = pizzaController.cadastrar(new PizzaDTO(saboresList,30,2,Tamanho.M));
+		Assertions.assertEquals("Pizza cadastrada com sucesso", pizza.getBody());
+	}
+
+	@Test
+	void testPUTpizza(){
+		PizzaDTO pizzaDTO = new PizzaDTO(saboresList,55,1,Tamanho.GG);
+		pizzaDTO.setId(1L);
+		var pizza = pizzaController.editaPizza(1L, pizzaDTO);
+		Assertions.assertEquals("pizza EDITADA com Sucesso", pizza.getBody());
+
+	}
+
+	@Test
+	void testDELETEpizza(){
+		var pizza = pizzaController.deleta(2L);
+		Assertions.assertEquals("Pizza excluída!!", pizza.getBody());
+	}
+	@Test
+	void testFindByIDpizza(){
+		pizzaController.cadastrar(new PizzaDTO(saboresList,20,1, Tamanho.P));
+		var pizza = pizzaController.findByIdPath(1L);
+		Assertions.assertEquals(Objects.requireNonNull(pizza.getBody()).getSabores(), pizzaController.findByIdPath(1L).getBody().getSabores());
+	}
+	@Test
+	void testFindAllPizza(){
+		ResponseEntity<List<Pizza>> pizzaFuncaoController = pizzaController.ListaCompleta();
+		List<Pizza> pizzaListController = pizzaFuncaoController.getBody();
+
+		Assertions.assertNotNull(pizzaListController);
+		for (int i = 0; i< pizzaList.size(); i++){
+			Assertions.assertEquals(pizzaList.get(i),pizzaListController.get(i));
+		}
+	}
+
+	@Test
+	void testCriarProduto(){
+		EstoqueProds estoqueProds = new EstoqueProds(2L,30,"AcaiTerra");
+		var produto = produtosController.cadastrarProdutos(new ProdutosDTO(3,33,estoqueProds));
+		Assertions.assertEquals("Produto feito com sucesso", produto.getBody());
+	}
+
+	@Test
+	void testPUTproduto(){
+		EstoqueProds estoqueProds = new EstoqueProds(5L,55,"NemSei");
+		ProdutosDTO produtosDTO =new ProdutosDTO(10,20,estoqueProds);
+		produtosDTO.setId(1L);
+		var produto = produtosController.edita(1L, produtosDTO);
+		Assertions.assertEquals("Produto Editado com Sucesso",produto.getBody());
+	}
+
+	@Test
+	void testDELETEproduto(){
+		var produtoDelete = produtosController.deletaProdutos(2L);
+		Assertions.assertEquals("Produto Excluido Com Sucesso",produtoDelete.getBody());
+	}
+
+	@Test
+	void testFindByIdProduto(){
+		EstoqueProds estoqueProds = new EstoqueProds(8L,40,"ProdutoX");
+		produtosController.cadastrarProdutos(new ProdutosDTO(7,70,estoqueProds));
+	}
+	@Test
+	void testFindallProduto(){
+		ResponseEntity<List<Produtos>> produtoFuncaoController = produtosController.listaProdutos();
+		List<Produtos> produtoListController = produtoFuncaoController.getBody();
+
+		Assertions.assertNotNull(produtoListController);
+		for (int i = 0; i< produtosList.size(); i++){
+			Assertions.assertEquals(produtosList.get(i),produtoListController.get(i));
+		}
+	}
+
 }
