@@ -32,4 +32,11 @@ public class Login extends AbstractEntity {
             )
     )
     private Usuario usuario;
+
+    public Login(){}
+
+    public Login(String nomeLogin, String senhaLogin) {
+        this.nomeLogin = nomeLogin;
+        this.senhaLogin = senhaLogin;
+    }
 }

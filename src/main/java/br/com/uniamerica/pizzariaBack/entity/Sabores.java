@@ -14,4 +14,10 @@ public class Sabores extends AbstractEntity{
     @Column(name = "saborPizza", length = 70, unique = true)
     private String saborPizza;
 
+    public Sabores(){
+
+    }
+    public Sabores(String saborPizza) {
+        this.saborPizza = saborPizza;
+    }
 }

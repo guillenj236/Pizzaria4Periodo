@@ -19,7 +19,7 @@ public class UsuarioController {
     private UsuarioRep usuarioRep;
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> findByIdPath(@PathVariable("id") final Long id){
+    public ResponseEntity<Usuario> findByIdPath(@PathVariable("id") final Long id){
         final Usuario usuario = this.usuarioRep.findById(id).orElse(null);
         return ResponseEntity.ok(usuario);
     }

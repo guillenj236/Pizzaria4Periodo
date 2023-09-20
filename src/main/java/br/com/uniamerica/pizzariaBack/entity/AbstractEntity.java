@@ -1,6 +1,4 @@
 package br.com.uniamerica.pizzariaBack.entity;
-
-
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -11,7 +9,7 @@ public class AbstractEntity  {
     @Getter
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false, unique = true)
-    private Long id;
+    protected Long id;
 
 
 }

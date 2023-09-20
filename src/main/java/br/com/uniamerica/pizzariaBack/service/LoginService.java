@@ -1,7 +1,6 @@
 package br.com.uniamerica.pizzariaBack.service;
 import br.com.uniamerica.pizzariaBack.dto.LoginDTO;
 import br.com.uniamerica.pizzariaBack.entity.Login;
-import br.com.uniamerica.pizzariaBack.entity.Sabores;
 import br.com.uniamerica.pizzariaBack.repository.LoginRep;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +28,6 @@ public class LoginService {
         Login loginExist = loginRep.findByNomeLogin(login.getNomeLogin());
         Assert.isTrue(loginExist == null || loginExist.equals(login), "Login já existente!!");
 
-       // Assert.isTrue(!login.getUsuario().equals(""), "O usuario nao pode ser nulo");
-
         this.loginRep.save(login);
     }
 
@@ -38,6 +35,7 @@ public class LoginService {
     public void atualizaLogin(Login login){
 
         Login loginExistente = this.loginRep.findById(login.getId()).orElse(null);
+        Assert.isTrue(loginExistente == null || !loginExistente.equals(login), "Login nulo ou nao certo");
 
         this.loginRep.save(login);
     }
@@ -47,7 +45,7 @@ public class LoginService {
 
         final Login loginBanco = this.loginRep.findById(id).orElse(null);
 
-        if (loginBanco == null || loginBanco.getId()!=(id)){
+        if (loginBanco == null || !loginBanco.getId().equals(id)){
             throw new RuntimeException("Não foi possivel identificar o login informado.");
         }
         this.loginRep.delete(loginBanco);

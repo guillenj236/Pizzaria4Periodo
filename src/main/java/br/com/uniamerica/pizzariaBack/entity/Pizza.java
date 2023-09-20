@@ -40,4 +40,14 @@ public class Pizza extends AbstractEntity{
     @Column(name = "tamanho")
     private Tamanho tamanho;
 
+    public Pizza(){
+
+    }
+
+    public Pizza(List<Sabores> sabores, float precoPizza, int quantidadePizza, Tamanho tamanho) {
+        this.sabores = sabores;
+        this.precoPizza = precoPizza;
+        this.quantidadePizza = quantidadePizza;
+        this.tamanho = tamanho;
+    }
 }

@@ -1,7 +1,5 @@
 package br.com.uniamerica.pizzariaBack.service;
-
 import br.com.uniamerica.pizzariaBack.dto.UsuarioDTO;
-import br.com.uniamerica.pizzariaBack.entity.Sabores;
 import br.com.uniamerica.pizzariaBack.entity.Usuario;
 import br.com.uniamerica.pizzariaBack.repository.UsuarioRep;
 import org.springframework.beans.BeanUtils;
@@ -46,7 +44,7 @@ public class UsuarioService {
 
         final Usuario usuarioBanco = this.usuarioRep.findById(id).orElse(null);
 
-        if (usuarioBanco == null || usuarioBanco.getId()!=(id)){
+        if (usuarioBanco == null || !usuarioBanco.getId().equals(id)){
             throw new RuntimeException("Não foi possivel identificar o usuario informado.");
         }
         this.usuarioRep.save(usuarioBanco);

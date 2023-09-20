@@ -24,4 +24,14 @@ public class Endereco extends AbstractEntity{
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
 
+    public Endereco(){
+
+    }
+    public Endereco(Long id,String rua, String bairro, int numeroEnd, Usuario usuario) {
+        this.id = id;
+        this.rua = rua;
+        this.bairro = bairro;
+        this.numeroEnd = numeroEnd;
+        this.usuario = usuario;
+    }
 }

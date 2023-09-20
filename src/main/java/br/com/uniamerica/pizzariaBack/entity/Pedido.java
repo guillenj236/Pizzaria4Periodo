@@ -68,6 +68,25 @@ public class Pedido extends AbstractEntity{
     @Column(name = "delivery")
     private boolean delivery;
 
+    public Pedido(){
+
+    }
+
+    public Pedido(boolean entrega, Status status, List<Pizza> pizzas, List<Produtos> produtos, float pedido_preco, boolean pagamentoCartao, boolean pagamentoDinheiro, Funcionario funcionario, String observacao, LocalDateTime cadastro, Usuario usuario, LocalDate dataPedido, boolean delivery) {
+        this.entrega = entrega;
+        this.status = status;
+        this.pizzas = pizzas;
+        this.produtos = produtos;
+        this.pedido_preco = pedido_preco;
+        this.pagamentoCartao = pagamentoCartao;
+        this.pagamentoDinheiro = pagamentoDinheiro;
+        this.funcionario = funcionario;
+        this.observacao = observacao;
+        this.cadastro = cadastro;
+        this.usuario = usuario;
+        this.dataPedido = dataPedido;
+        this.delivery = delivery;
+    }
 
     @PrePersist
     private void prePersist(){

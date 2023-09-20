@@ -23,7 +23,6 @@ public class EnderecoService {
 
         Assert.isTrue(endereco.getBairro() != null, "Bairro nao pode ser nulo!!");
         Assert.isTrue(endereco.getBairro().length() <= 30, "Maximo de caracteres para bairro alcancado!");
-
         Assert.isTrue(endereco.getRua() != null, "A rua nao pode ser nula!!");
         Assert.isTrue(endereco.getRua().length() <= 30, "Maximo de caracteres para rua alcancados!!");
 

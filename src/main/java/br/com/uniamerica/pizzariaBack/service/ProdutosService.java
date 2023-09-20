@@ -3,7 +3,6 @@ package br.com.uniamerica.pizzariaBack.service;
 import br.com.uniamerica.pizzariaBack.dto.ProdutosDTO;
 import br.com.uniamerica.pizzariaBack.entity.EstoqueProds;
 import br.com.uniamerica.pizzariaBack.entity.Produtos;
-import br.com.uniamerica.pizzariaBack.entity.Sabores;
 import br.com.uniamerica.pizzariaBack.repository.EstoqueProdRep;
 import br.com.uniamerica.pizzariaBack.repository.ProdutosRep;
 import org.springframework.beans.BeanUtils;
@@ -60,7 +59,7 @@ public class ProdutosService {
 
         final Produtos produtoBanco = this.produtosRep.findById(id).orElse(null);
 
-        if (produtoBanco == null || produtoBanco.getId()!=(id)){
+        if (produtoBanco == null || !produtoBanco.getId().equals(id)){
             throw new RuntimeException("Não foi possivel identificar o produto informado.");
         }
         this.produtosRep.delete(produtoBanco);

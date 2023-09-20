@@ -1,7 +1,6 @@
 package br.com.uniamerica.pizzariaBack.service;
 import br.com.uniamerica.pizzariaBack.dto.PedidoDTO;
 import br.com.uniamerica.pizzariaBack.entity.*;
-import br.com.uniamerica.pizzariaBack.repository.EstoqueProdRep;
 import br.com.uniamerica.pizzariaBack.repository.PedidoRep;
 import br.com.uniamerica.pizzariaBack.repository.PizzaRep;
 import br.com.uniamerica.pizzariaBack.repository.ProdutosRep;
@@ -46,8 +45,6 @@ public class PedidoService {
 
                 Optional<Pizza> pizzaTemp = pizzaRep.findById(pizza.getId());
                 total += pizzaTemp.get().getPrecoPizza();
-                System.out.println("Pizza ID: " + pizza.getId());
-                System.out.println("Preço da Pizza: " + pizza.getPrecoPizza());
             }
         }
 
@@ -81,7 +78,6 @@ public class PedidoService {
                 pedidoExistente.setStatus(Status.A_CAMINHO);
             }else {
                 pedidoExistente.setStatus(Status.BALCAO);
-                System.out.println("POR GENTILEZA RETIRAR NO BALCAO");
             }
             this.pedidoRep.save(pedidoExistente);
         }
@@ -132,7 +128,13 @@ public class PedidoService {
                     writer.write("Sabor da pizza: " + sabores.getSaborPizza() + "\n");
                 }
             }
+            for (Produtos produtos : pedido.getProdutos()){
+                writer.write("Nome do produto: " + produtos.getEstoqueProds().getNomeProduto() + "\n");
+                writer.write("Quantidade: " + produtos.getQuantidade_prod() + "\n");
+            }
             writer.write("Observacoes: " + pedido.getObservacao());
+
+            writer.write("Total do pedido: " + pedido.getPedido_preco());
         }catch (IOException e) {
             System.out.println("Erro ao salvar o arquivo: " + e.getMessage() + "\n");
         }
@@ -151,6 +153,10 @@ public class PedidoService {
                 for (Sabores sabores : pizza.getSabores()){
                     writer.write("Sabor da pizza: " + sabores.getSaborPizza() + "\n");
                 }
+            }
+            for (Produtos produtos : pedido.getProdutos()){
+                writer.write("Nome do produto: " + produtos.getEstoqueProds().getNomeProduto() + "\n");
+                writer.write("Quantidade: " + produtos.getQuantidade_prod() + "\n");
             }
             writer.write("Observacoes: " + pedido.getObservacao());
 

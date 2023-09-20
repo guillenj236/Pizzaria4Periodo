@@ -45,7 +45,7 @@ public class FuncionarioService {
 
         final Funcionario funcionarioBanco = this.funcionarioRep.findById(id).orElse(null);
 
-        if (funcionarioBanco == null || funcionarioBanco.getId()!=(id)){
+        if (funcionarioBanco == null || !funcionarioBanco.getId().equals(id)){
             throw new RuntimeException("Não foi possivel identificar o funcionario informado.");
         }
         this.funcionarioRep.delete(funcionarioBanco);
