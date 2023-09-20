@@ -8,4 +8,8 @@ import lombok.EqualsAndHashCode;
 public class SaboresDTO extends AbstractDTO{
 
     private String saborPizza;
+
+    public SaboresDTO(String saborPizza) {
+        this.saborPizza = saborPizza;
+    }
 }

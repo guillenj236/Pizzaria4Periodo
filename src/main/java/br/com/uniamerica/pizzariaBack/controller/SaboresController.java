@@ -9,6 +9,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(value = "/api/sabores")
 public class SaboresController {
@@ -21,17 +23,17 @@ public class SaboresController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> findByIdPath(@PathVariable("id") final Long id){
+    public ResponseEntity<Sabores> findByIdPath(@PathVariable("id") final Long id){
         final Sabores sabores = this.saboresRep.findById(id).orElse(null);
         return ResponseEntity.ok(sabores);
     }
     @GetMapping("/lista")
-    public ResponseEntity <?> ListaSabores(){
+    public ResponseEntity <List<Sabores>> ListaSabores(){
         return ResponseEntity.ok(this.saboresRep.findAll());
     }
 
     @PostMapping
-    public ResponseEntity <?> cadastrarSabores(@RequestBody final SaboresDTO saboresDTO){
+    public ResponseEntity <String> cadastrarSabores(@RequestBody final SaboresDTO saboresDTO){
         try {
             saboresService.cadastarSabor(saboresDTO);
             return ResponseEntity.ok("Registro cadastrado com sucesso");
@@ -42,7 +44,7 @@ public class SaboresController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> editaSabor(@PathVariable("id") final Long id, @RequestBody final Sabores sabores){
+    public ResponseEntity<String> editaSabor(@PathVariable("id") final Long id, @RequestBody final Sabores sabores){
         try {
             saboresService.atualizaSabor(sabores);
             final Sabores sabores1 = this.saboresRep.findById(id).orElse(null);
@@ -63,7 +65,7 @@ public class SaboresController {
 
 
     @DeleteMapping("/deleta/{id}")
-    public ResponseEntity<?> deletaSabor(@PathVariable("id") final Long id) {
+    public ResponseEntity<String> deletaSabor(@PathVariable("id") final Long id) {
         try {
                 this.saboresService.excluirSabor(id);
                 return ResponseEntity.ok("Sabor excluído com sucesso!!");

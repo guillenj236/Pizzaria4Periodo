@@ -10,6 +10,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(value = "/api/estoqueProd")
 public class EstoqueProdsController {
@@ -21,18 +23,18 @@ public class EstoqueProdsController {
     private EstoqueProdsService estoqueProdsService;
 
    @GetMapping("/{id}")
-   public ResponseEntity<?> findByIdPath(@PathVariable("id") final Long id){
+   public ResponseEntity<EstoqueProds> findByIdPath(@PathVariable("id") final Long id){
        final EstoqueProds estoqueProds = this.estoqueProdRep.findById(id).orElse(null);
        return ResponseEntity.ok(estoqueProds);
    }
 
     @GetMapping("/lista")
-    public ResponseEntity <?> ListaCompleta(){
+    public ResponseEntity <List<EstoqueProds>> ListaCompleta(){
         return ResponseEntity.ok(this.estoqueProdRep.findAll());
     }
 
     @PostMapping
-    public ResponseEntity <?> cadastrarEstoque(@RequestBody final EstoqueDTO estoqueDTO){
+    public ResponseEntity <String> cadastrarEstoque(@RequestBody final EstoqueDTO estoqueDTO){
         try {
             estoqueProdsService.cadastrarNoEstoque(estoqueDTO);
             return ResponseEntity.ok("Produto cadastrado com sucesso");
@@ -43,7 +45,7 @@ public class EstoqueProdsController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> editarEstoque(@PathVariable("id") final Long id, @RequestBody final EstoqueProds estoqueProds){
+    public ResponseEntity<String> editarEstoque(@PathVariable("id") final Long id, @RequestBody final EstoqueProds estoqueProds){
         try {
             estoqueProdsService.atualizaEstoque(estoqueProds);
             final EstoqueProds estoqueProds1 = this.estoqueProdRep.findById(id).orElse(null);
@@ -63,7 +65,7 @@ public class EstoqueProdsController {
     }
 
     @DeleteMapping("/deleta/{id}")
-    public ResponseEntity<?> deletaNoEstoque(@PathVariable("id") final Long id) {
+    public ResponseEntity<String> deletaNoEstoque(@PathVariable("id") final Long id) {
         try {
            this.estoqueProdsService.excluirProdEst(id);
             return ResponseEntity.ok("Produto excluído com sucesso!!");

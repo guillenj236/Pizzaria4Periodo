@@ -12,4 +12,12 @@ public class LoginDTO extends AbstractDTO {
     private String senhaLogin;
     private Usuario usuario;
 
+    public LoginDTO(){
+
+    }
+
+    public LoginDTO(String nomeLogin, String senhaLogin) {
+        this.nomeLogin = nomeLogin;
+        this.senhaLogin = senhaLogin;
+    }
 }

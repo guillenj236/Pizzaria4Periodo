@@ -9,6 +9,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(value = "/api/pizza")
 public class PizzaController {
@@ -20,18 +22,18 @@ public class PizzaController {
     private PizzaService pizzaService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> findByIdPath(@PathVariable("id") final Long id){
+    public ResponseEntity<Pizza> findByIdPath(@PathVariable("id") final Long id){
         final Pizza pizza = this.pizzaRep.findById(id).orElse(null);
         return ResponseEntity.ok(pizza);
     }
 
     @GetMapping("/lista")
-    public ResponseEntity <?> ListaCompleta(){
+    public ResponseEntity <List<Pizza>> ListaCompleta(){
         return ResponseEntity.ok(this.pizzaRep.findAll());
     }
 
     @PostMapping
-    public ResponseEntity<?> cadastrar (@RequestBody final PizzaDTO pizzaDTO){
+    public ResponseEntity<String> cadastrar (@RequestBody final PizzaDTO pizzaDTO){
     try {
         pizzaService.cadastrarPizza(pizzaDTO);
         return ResponseEntity.ok("Pizza cadastrada com sucesso");
@@ -42,7 +44,7 @@ public class PizzaController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> editaPizza(@PathVariable("id") final Long id, @RequestBody final PizzaDTO pizzaDTO){
+    public ResponseEntity<String> editaPizza(@PathVariable("id") final Long id, @RequestBody final PizzaDTO pizzaDTO){
         try {
             final Pizza pizza1 = this.pizzaRep.findById(id).orElse(null);
 
@@ -59,7 +61,7 @@ public class PizzaController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleta(@PathVariable Long id) {
+    public ResponseEntity<String> deleta(@PathVariable Long id) {
         try {
 
             this.pizzaService.excluirPizza(id);

@@ -8,6 +8,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(value = "/api/login")
 public class LoginController {
@@ -19,17 +21,17 @@ public class LoginController {
     private LoginService loginService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> findByIdPath(@PathVariable("id") final Long id){
+    public ResponseEntity<Login> findByIdPath(@PathVariable("id") final Long id){
         final Login login = this.loginRep.findById(id).orElse(null);
         return ResponseEntity.ok(login);
     }
     @GetMapping("/lista")
-    public ResponseEntity <?> ListaLogin(){
+    public ResponseEntity <List<Login>> ListaLogin(){
         return ResponseEntity.ok(this.loginRep.findAll());
     }
 
     @PostMapping
-    public ResponseEntity <?> cadastrarLogin(@RequestBody final LoginDTO loginDTO){
+    public ResponseEntity <String> cadastrarLogin(@RequestBody final LoginDTO loginDTO){
         try {
             this.loginService.cadastraLogin(loginDTO);
             return ResponseEntity.ok("Login cadastrado com sucesso");
@@ -40,7 +42,7 @@ public class LoginController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity <?> editarUser(@PathVariable("id") final Long id, @RequestBody final Login login){
+    public ResponseEntity <String> editarUser(@PathVariable("id") final Long id, @RequestBody final Login login){
         try {
          loginService.atualizaLogin(login);
          final Login login1 = this.loginRep.findById(id).orElse(null);
@@ -57,7 +59,7 @@ public class LoginController {
     }
 
     @DeleteMapping("/deleta/{id}")
-    public ResponseEntity<?> deleta(@PathVariable Long id) {
+    public ResponseEntity<String> deleta(@PathVariable Long id) {
         try {
 
             this.loginService.excluirLogin(id);

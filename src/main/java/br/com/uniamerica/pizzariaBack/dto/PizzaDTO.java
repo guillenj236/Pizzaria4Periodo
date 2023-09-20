@@ -16,4 +16,11 @@ public class PizzaDTO extends AbstractDTO{
     private int quantidadePizza;
 
     private Tamanho tamanho;
+
+    public PizzaDTO(List<Sabores> sabores, float precoPizza, int quantidadePizza, Tamanho tamanho) {
+        this.sabores = sabores;
+        this.precoPizza = precoPizza;
+        this.quantidadePizza = quantidadePizza;
+        this.tamanho = tamanho;
+    }
 }

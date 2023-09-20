@@ -21,7 +21,8 @@ public class EstoqueProds extends AbstractEntity{
     public EstoqueProds(){
 
     }
-    public EstoqueProds(float precoProdutos, String nomeProduto) {
+    public EstoqueProds(Long id,float precoProdutos, String nomeProduto) {
+        this.id = id;
         this.precoProdutos = precoProdutos;
         this.nomeProduto = nomeProduto;
     }

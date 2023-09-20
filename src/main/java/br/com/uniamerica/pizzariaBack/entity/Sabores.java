@@ -17,7 +17,8 @@ public class Sabores extends AbstractEntity{
     public Sabores(){
 
     }
-    public Sabores(String saborPizza) {
+    public Sabores(Long id, String saborPizza) {
+        this.id = id;
         this.saborPizza = saborPizza;
     }
 }

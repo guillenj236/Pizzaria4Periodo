@@ -10,4 +10,9 @@ public class EstoqueDTO extends AbstractDTO {
 
 
     private String nomeProduto;
+
+    public EstoqueDTO(float precoProdutos, String nomeProduto) {
+        this.precoProdutos = precoProdutos;
+        this.nomeProduto = nomeProduto;
+    }
 }
