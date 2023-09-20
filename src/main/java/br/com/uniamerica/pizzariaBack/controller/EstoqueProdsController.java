@@ -1,6 +1,4 @@
 package br.com.uniamerica.pizzariaBack.controller;
-
-
 import br.com.uniamerica.pizzariaBack.dto.EstoqueDTO;
 import br.com.uniamerica.pizzariaBack.entity.EstoqueProds;
 import br.com.uniamerica.pizzariaBack.repository.EstoqueProdRep;
@@ -39,8 +37,9 @@ public class EstoqueProdsController {
             estoqueProdsService.cadastrarNoEstoque(estoqueDTO);
             return ResponseEntity.ok("Produto cadastrado com sucesso");
         }
-        catch (Exception e){
-            return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
+        catch (RuntimeException e){
+            String errorMessage = getErrorMessage(e);
+            return ResponseEntity.internalServerError().body(errorMessage);
         }
     }
 
@@ -60,7 +59,8 @@ public class EstoqueProdsController {
                     .body("Error: " + e.getCause().getCause().getMessage());
         }
         catch (RuntimeException e){
-            return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
+            String errorMessage = getErrorMessage(e);
+            return ResponseEntity.internalServerError().body(errorMessage);
         }
     }
 
@@ -69,10 +69,14 @@ public class EstoqueProdsController {
         try {
            this.estoqueProdsService.excluirProdEst(id);
             return ResponseEntity.ok("Produto excluído com sucesso!!");
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
+        } catch (RuntimeException e){
+            String errorMessage = getErrorMessage(e);
+            return ResponseEntity.internalServerError().body(errorMessage);
         }
     }
 
+    private String getErrorMessage(Exception e) {
+        return "Error: " + e.getMessage();
+    }
 
 }

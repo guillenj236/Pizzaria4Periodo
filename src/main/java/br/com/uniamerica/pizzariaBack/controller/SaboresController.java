@@ -5,7 +5,6 @@ import br.com.uniamerica.pizzariaBack.entity.Sabores;
 import br.com.uniamerica.pizzariaBack.repository.SaboresRep;
 import br.com.uniamerica.pizzariaBack.service.SaboresService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,8 +37,9 @@ public class SaboresController {
             saboresService.cadastarSabor(saboresDTO);
             return ResponseEntity.ok("Registro cadastrado com sucesso");
         }
-        catch (Exception e){
-            return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
+        catch (RuntimeException e){
+            String errorMessage = getErrorMessage(e);
+            return ResponseEntity.internalServerError().body(errorMessage);
         }
     }
 
@@ -54,12 +54,9 @@ public class SaboresController {
             }
             return ResponseEntity.ok("Sabor editado com Sucesso");
         }
-        catch (DataIntegrityViolationException e){
-            return ResponseEntity.internalServerError()
-                    .body("Error: " + e.getCause().getCause().getMessage());
-        }
         catch (RuntimeException e){
-            return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
+            String errorMessage = getErrorMessage(e);
+            return ResponseEntity.internalServerError().body(errorMessage);
         }
     }
 
@@ -69,9 +66,15 @@ public class SaboresController {
         try {
                 this.saboresService.excluirSabor(id);
                 return ResponseEntity.ok("Sabor excluído com sucesso!!");
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
+        } catch (RuntimeException e){
+            String errorMessage = getErrorMessage(e);
+            return ResponseEntity.internalServerError().body(errorMessage);
         }
     }
+
+    private String getErrorMessage(Exception e) {
+        return "Error: " + e.getMessage();
+    }
+
 
 }

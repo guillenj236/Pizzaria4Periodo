@@ -5,7 +5,6 @@ import br.com.uniamerica.pizzariaBack.entity.Pizza;
 import br.com.uniamerica.pizzariaBack.repository.PizzaRep;
 import br.com.uniamerica.pizzariaBack.service.PizzaService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,8 +37,9 @@ public class PizzaController {
         pizzaService.cadastrarPizza(pizzaDTO);
         return ResponseEntity.ok("Pizza cadastrada com sucesso");
     }
-    catch (Exception e){
-        return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
+    catch (RuntimeException e){
+        String errorMessage = getErrorMessage(e);
+        return ResponseEntity.internalServerError().body(errorMessage);
     }
     }
 
@@ -54,9 +54,9 @@ public class PizzaController {
           this.pizzaService.atualizPizza(pizzaDTO);
             return ResponseEntity.ok("pizza EDITADA com Sucesso");
         }
-        catch (DataIntegrityViolationException e){
-            return ResponseEntity.internalServerError()
-                    .body("Error: " + e.getMessage());
+        catch (RuntimeException e){
+            String errorMessage = getErrorMessage(e);
+            return ResponseEntity.internalServerError().body(errorMessage);
         }
     }
 
@@ -68,7 +68,13 @@ public class PizzaController {
             return ResponseEntity.ok("Pizza excluída!!");
         }
         catch (RuntimeException e){
-            return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
+            String errorMessage = getErrorMessage(e);
+            return ResponseEntity.internalServerError().body(errorMessage);
         }
     }
+
+    private String getErrorMessage(Exception e) {
+        return "Error: " + e.getMessage();
+    }
+
 }

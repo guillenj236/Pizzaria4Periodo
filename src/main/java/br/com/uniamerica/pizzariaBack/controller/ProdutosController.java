@@ -1,11 +1,9 @@
 package br.com.uniamerica.pizzariaBack.controller;
-
 import br.com.uniamerica.pizzariaBack.dto.ProdutosDTO;
 import br.com.uniamerica.pizzariaBack.entity.Produtos;
 import br.com.uniamerica.pizzariaBack.repository.ProdutosRep;
 import br.com.uniamerica.pizzariaBack.service.ProdutosService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,8 +35,9 @@ public class ProdutosController {
            produtosService.cadastrarProduto(produtosDTO);
             return ResponseEntity.ok("Produto feito com sucesso");
         }
-        catch (Exception e){
-            return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
+        catch (RuntimeException e){
+            String errorMessage = getErrorMessage(e);
+            return ResponseEntity.internalServerError().body(errorMessage);
         }
     }
 
@@ -53,9 +52,9 @@ public class ProdutosController {
             this.produtosService.atualizaProduto(produtosDTO);
             return ResponseEntity.ok("Produto Editado com Sucesso");
         }
-        catch (DataIntegrityViolationException e){
-            return ResponseEntity.internalServerError()
-                    .body("Error: " + e.getMessage());
+        catch (RuntimeException e){
+            String errorMessage = getErrorMessage(e);
+            return ResponseEntity.internalServerError().body(errorMessage);
         }
     }
 
@@ -67,7 +66,13 @@ public class ProdutosController {
             return ResponseEntity.ok("Produto Excluido Com Sucesso");
         }
         catch (RuntimeException e){
-            return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
+            String errorMessage = getErrorMessage(e);
+            return ResponseEntity.internalServerError().body(errorMessage);
         }
     }
+
+    private String getErrorMessage(Exception e) {
+        return "Error: " + e.getMessage();
+    }
+
 }

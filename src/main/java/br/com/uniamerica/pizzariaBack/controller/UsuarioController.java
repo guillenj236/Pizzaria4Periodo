@@ -4,7 +4,6 @@ import br.com.uniamerica.pizzariaBack.entity.Usuario;
 import br.com.uniamerica.pizzariaBack.repository.UsuarioRep;
 import br.com.uniamerica.pizzariaBack.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,8 +41,9 @@ public class UsuarioController {
             usuarioService.cadastraUsuario(usuarioDTO);
             return ResponseEntity.ok("Usuario cadastrado com sucesso!!");
         }
-        catch (Exception e){
-            return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
+        catch (RuntimeException e){
+            String errorMessage = getErrorMessage(e);
+            return ResponseEntity.internalServerError().body(errorMessage);
         }
     }
 
@@ -57,9 +57,9 @@ public class UsuarioController {
             }
             return ResponseEntity.ok("USUARIO editado com Sucesso");
         }
-        catch (DataIntegrityViolationException e){
-            return ResponseEntity.internalServerError()
-                    .body("Error: " + e.getMessage());
+        catch (RuntimeException e){
+            String errorMessage = getErrorMessage(e);
+            return ResponseEntity.internalServerError().body(errorMessage);
         }
     }
 
@@ -70,9 +70,13 @@ public class UsuarioController {
             return ResponseEntity.ok("usuario Excluido");
         }
         catch (RuntimeException e){
-            return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
+            String errorMessage = getErrorMessage(e);
+            return ResponseEntity.internalServerError().body(errorMessage);
         }
     }
 
+    private String getErrorMessage(Exception e) {
+        return "Error: " + e.getMessage();
+    }
 
 }

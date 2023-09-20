@@ -37,8 +37,9 @@ public class EnderecoController {
             this.enderecoService.cadastrarEndereco(enderecoDTO);
             return ResponseEntity.ok("Endereco cadastrado com sucesso!");
         }
-        catch (Exception e){
-            return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
+        catch (RuntimeException e){
+            String errorMessage = getErrorMessage(e);
+            return ResponseEntity.internalServerError().body(errorMessage);
         }
     }
 
@@ -53,9 +54,9 @@ public class EnderecoController {
             this.enderecoService.atualizaEndereco(enderecoDTO);
             return ResponseEntity.ok("Registro EDITADO com sucesso!!");
         }
-        catch (DataIntegrityViolationException e){
-            return ResponseEntity.internalServerError()
-                    .body("Error: " + e.getMessage());
+        catch (RuntimeException e){
+            String errorMessage = getErrorMessage(e);
+            return ResponseEntity.internalServerError().body(errorMessage);
         }
     }
 
@@ -66,7 +67,13 @@ public class EnderecoController {
             return ResponseEntity.ok("Endereco Exluido com Sucesso!");
         }
         catch (RuntimeException e){
-            return ResponseEntity.internalServerError().body("Error:" + e.getMessage());
+            String errorMessage = getErrorMessage(e);
+            return ResponseEntity.internalServerError().body(errorMessage);
         }
     }
+
+    private String getErrorMessage(Exception e) {
+        return "Error: " + e.getMessage();
+    }
+
 }

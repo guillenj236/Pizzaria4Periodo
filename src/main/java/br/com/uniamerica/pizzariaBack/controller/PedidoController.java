@@ -5,11 +5,11 @@ import br.com.uniamerica.pizzariaBack.entity.Pedido;
 import br.com.uniamerica.pizzariaBack.repository.PedidoRep;
 import br.com.uniamerica.pizzariaBack.service.PedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/pedido")
@@ -17,39 +17,40 @@ public class PedidoController {
 
     @Autowired
     private PedidoRep pedidoRep;
-
     @Autowired
     private PedidoService pedidoService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> findByIdPath(@PathVariable("id") final Long id){
+    public ResponseEntity<Pedido> findByIdPath(@PathVariable("id") final Long id){
         final Pedido pedido = this.pedidoRep.findById(id).orElse(null);
         return ResponseEntity.ok(pedido);
     }
     @GetMapping("/lista")
-    public ResponseEntity <?> ListaPedidos(){
+    public ResponseEntity <List<Pedido>> ListaPedidos(){
         return ResponseEntity.ok(this.pedidoRep.findAll());
     }
 
     @GetMapping ("/comanda/{id}")
-    public ResponseEntity <?> findById (@PathVariable ("id") Long id){
+    public ResponseEntity <String> findById (@PathVariable ("id") final Long id){
         try {
-            Pedido pedido = pedidoRep.getById(id);
+            Pedido pedido = pedidoRep.getReferenceById(id);
             pedidoService.comandaPedido(pedido);
             return ResponseEntity.ok("comanda gerada com sucesso");
-        }catch (Exception e){
-            return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
+        }catch (RuntimeException e){
+            String errorMessage = getErrorMessage(e);
+            return ResponseEntity.internalServerError().body(errorMessage);
         }
     }
 
     @GetMapping ("/cozinha/{id}")
-    public ResponseEntity <?> comandaDeCria (@PathVariable ("id") Long id){
+    public ResponseEntity <String> comandaDeCria (@PathVariable ("id") Long id){
         try {
-            Pedido pedido = pedidoRep.getById(id);
+            Pedido pedido = pedidoRep.getReferenceById(id);
             pedidoService.comandaCozinha(pedido);
             return ResponseEntity.ok("comanda gerada para cozinha com sucesso!!");
-        } catch (Exception e){
-            return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
+        } catch (RuntimeException e){
+            String errorMessage = getErrorMessage(e);
+            return ResponseEntity.internalServerError().body(errorMessage);
         }
     }
 
@@ -77,18 +78,19 @@ public class PedidoController {
     }
 
     @PostMapping
-    public ResponseEntity <?> cadastrarPedido(@RequestBody final PedidoDTO pedidoDTO){
+    public ResponseEntity <String> cadastrarPedido(@RequestBody final PedidoDTO pedidoDTO){
         try {
             this.pedidoService.cadastraPedido(pedidoDTO);
             return ResponseEntity.ok("Pedido cadastrado com sucesso!!");
         }
-        catch (Exception e){
-            return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
+        catch (RuntimeException e){
+            String errorMessage = getErrorMessage(e);
+            return ResponseEntity.internalServerError().body(errorMessage);
         }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> editaPedido(@PathVariable("id") final Long id, @RequestBody final PedidoDTO pedidoDTO){
+    public ResponseEntity<String> editaPedido(@PathVariable("id") final Long id, @RequestBody final PedidoDTO pedidoDTO){
         try {
             final Pedido pedido1 = this.pedidoRep.findById(id).orElse(null);
 
@@ -98,14 +100,14 @@ public class PedidoController {
             this.pedidoService.atualizaPedido(pedidoDTO);
             return ResponseEntity.ok("Pedido EDITADO com sucesso!!");
         }
-        catch (DataIntegrityViolationException e){
-            return ResponseEntity.internalServerError()
-                    .body("Error: " + e.getMessage());
+        catch (RuntimeException e){
+            String errorMessage = getErrorMessage(e);
+            return ResponseEntity.internalServerError().body(errorMessage);
         }
     }
 
     @PutMapping("/finalizaPed/{id}")
-    public ResponseEntity<?> finalizaPedido(@PathVariable ("id") final Long id, @RequestBody final Pedido pedido){
+    public ResponseEntity<String> finalizaPedido(@PathVariable ("id") final Long id, @RequestBody final Pedido pedido){
         try {
             final Pedido pedido1 = this.pedidoRep.findById(id).orElse(null);
 
@@ -115,20 +117,26 @@ public class PedidoController {
             this.pedidoService.FinalizaPedido(pedido);
             return ResponseEntity.ok("PEDIDO FINALIZADO");
         }
-        catch (DataIntegrityViolationException e){
-            return ResponseEntity.internalServerError()
-                    .body("Error: " + e.getMessage());
+        catch (RuntimeException e){
+            String errorMessage = getErrorMessage(e);
+            return ResponseEntity.internalServerError().body(errorMessage);
         }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deletaPedido(@PathVariable Long id){
+    public ResponseEntity<String> deletaPedido(@PathVariable Long id){
         try {
             this.pedidoService.excluirPedido(id);
             return ResponseEntity.ok("Pedido Excluido com sucesso!!");
         }
         catch (RuntimeException e){
-            return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
+            String errorMessage = getErrorMessage(e);
+            return ResponseEntity.internalServerError().body(errorMessage);
         }
     }
+
+    private String getErrorMessage(Exception e) {
+        return "Error: " + e.getMessage();
+    }
+
 }

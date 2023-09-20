@@ -72,7 +72,8 @@ public class Pedido extends AbstractEntity{
 
     }
 
-    public Pedido(boolean entrega, Status status, List<Pizza> pizzas, List<Produtos> produtos, float pedido_preco, boolean pagamentoCartao, boolean pagamentoDinheiro, Funcionario funcionario, String observacao, LocalDateTime cadastro, Usuario usuario, LocalDate dataPedido, boolean delivery) {
+    public Pedido(Long id,boolean entrega, Status status, List<Pizza> pizzas, List<Produtos> produtos, float pedido_preco, boolean pagamentoCartao, boolean pagamentoDinheiro, Funcionario funcionario, String observacao, LocalDateTime cadastro, Usuario usuario, LocalDate dataPedido, boolean delivery) {
+       this.id = id;
         this.entrega = entrega;
         this.status = status;
         this.pizzas = pizzas;

@@ -11,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.ResponseEntity;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -66,6 +69,12 @@ class PizzariaBackApplicationTests {
 	@Autowired
 	ProdutosController produtosController;
 	private List<Produtos> produtosList;
+
+	@MockBean
+	PedidoRep pedidoRep;
+	@Autowired
+	PedidoController pedidoController;
+	private List<Pedido> pedidoList;
 
 
 	@BeforeEach
@@ -167,6 +176,20 @@ class PizzariaBackApplicationTests {
 		Mockito.when(produtosRep.findById(1L)).thenReturn(Optional.of(produtos));
 		Mockito.when(produtosRep.findById(2L)).thenReturn(Optional.of(produtos2));
 		Mockito.when(produtosRep.findAll()).thenReturn(produtosList);
+
+		Pedido pedido = new Pedido(1L,false,Status.A_CAMINHO,pizzaList,produtosList,20,false,
+				true,funcionario,"obs", LocalDateTime.now(),usuario, LocalDate.now(),true);
+		Pedido pedido2 = new Pedido(2L,false,Status.A_CAMINHO,pizzaList,produtosList,20,false,
+				true,funcionario2,"Obs2",LocalDateTime.now(),usuario2,LocalDate.now(),true);
+		pedidoList = new ArrayList<>();
+		pedidoList.add(pedido);
+		pedidoList.add(pedido2);
+
+		Mockito.when(pedidoRep.save(pedido)).thenReturn(pedido);
+		Mockito.when(pedidoRep.save(pedido2)).thenReturn(pedido2);
+		Mockito.when(pedidoRep.findById(1L)).thenReturn(Optional.of(pedido));
+		Mockito.when(pedidoRep.findById(2L)).thenReturn(Optional.of(pedido2));
+		Mockito.when(pedidoRep.findAll()).thenReturn(pedidoList);
 	}
 	@Test
 	void testCriaUser(){
@@ -220,7 +243,7 @@ class PizzariaBackApplicationTests {
 		Usuario usuario = new Usuario(5L,"QUINTO", "45999335511");
 		enderecoController.cadastrarEndereco(new EnderecoDTO("RuaTOMA","BairroTOMA",530,usuario));
 		var endereco = enderecoController.findByIdPath(1L);
-		Assertions.assertEquals(Objects.requireNonNull(endereco.getBody()).getRua(), enderecoController.findByIdPath(1L).getBody().getRua());
+		Assertions.assertEquals(Objects.requireNonNull(endereco.getBody()).getRua(), Objects.requireNonNull(enderecoController.findByIdPath(1L).getBody()).getRua());
 	}
 
 	@Test
@@ -259,7 +282,7 @@ class PizzariaBackApplicationTests {
 	void testFindByIdFuncionario(){
 		funcionarioController.cadastrarFuncionario(new FuncionarioDTO("Ichigo"));
 		var funcionario = funcionarioController.findByIdPath(1L);
-		Assertions.assertEquals(Objects.requireNonNull(funcionario.getBody()).getNomeFunc(), funcionarioController.findByIdPath(1L).getBody().getNomeFunc());
+		Assertions.assertEquals(Objects.requireNonNull(funcionario.getBody()).getNomeFunc(), Objects.requireNonNull(funcionarioController.findByIdPath(1L).getBody()).getNomeFunc());
 	}
 
 	@Test
@@ -290,7 +313,7 @@ class PizzariaBackApplicationTests {
 	void testFindByIdEstoque(){
 		estoqueProdsController.cadastrarEstoque(new EstoqueDTO(4,"Danone"));
 		var estoque = estoqueProdsController.findByIdPath(1L);
-		Assertions.assertEquals(Objects.requireNonNull(estoque.getBody()).getNomeProduto(), estoqueProdsController.findByIdPath(1L).getBody().getNomeProduto());
+		Assertions.assertEquals(Objects.requireNonNull(estoque.getBody()).getNomeProduto(), Objects.requireNonNull(estoqueProdsController.findByIdPath(1L).getBody()).getNomeProduto());
 	}
 
 	@Test
@@ -320,7 +343,7 @@ class PizzariaBackApplicationTests {
 	void FindByIdSabores(){
 		saboresController.cadastrarSabores(new SaboresDTO("PizzaID"));
 		var sabor = saboresController.findByIdPath(1L);
-		Assertions.assertEquals(Objects.requireNonNull(sabor.getBody()).getSaborPizza(), saboresController.findByIdPath(1L).getBody().getSaborPizza());
+		Assertions.assertEquals(Objects.requireNonNull(sabor.getBody()).getSaborPizza(), Objects.requireNonNull(saboresController.findByIdPath(1L).getBody()).getSaborPizza());
 	}
 
 	@Test
@@ -347,7 +370,7 @@ class PizzariaBackApplicationTests {
 	void testFindByIdLogin(){
 		loginController.cadastrarLogin(new LoginDTO("teste","teste"));
 		var login = loginController.findByIdPath(1L);
-		Assertions.assertEquals(Objects.requireNonNull(login.getBody()).getNomeLogin(), loginController.findByIdPath(1L).getBody().getNomeLogin());
+		Assertions.assertEquals(Objects.requireNonNull(login.getBody()).getNomeLogin(), Objects.requireNonNull(loginController.findByIdPath(1L).getBody()).getNomeLogin());
 	}
 	@Test
 	void testFindAllLogin(){
@@ -384,7 +407,7 @@ class PizzariaBackApplicationTests {
 	void testFindByIDpizza(){
 		pizzaController.cadastrar(new PizzaDTO(saboresList,20,1, Tamanho.P));
 		var pizza = pizzaController.findByIdPath(1L);
-		Assertions.assertEquals(Objects.requireNonNull(pizza.getBody()).getSabores(), pizzaController.findByIdPath(1L).getBody().getSabores());
+		Assertions.assertEquals(Objects.requireNonNull(pizza.getBody()).getSabores(), Objects.requireNonNull(pizzaController.findByIdPath(1L).getBody()).getSabores());
 	}
 	@Test
 	void testFindAllPizza(){
@@ -434,5 +457,46 @@ class PizzariaBackApplicationTests {
 			Assertions.assertEquals(produtosList.get(i),produtoListController.get(i));
 		}
 	}
+
+	@Test
+	void testCriarPedido(){
+		Usuario usuario = new Usuario(1L,"Gabriel","45998036059");
+		Funcionario funcionarioPed = new Funcionario(1L,"Funcionario");
+
+		var pedido = pedidoController.cadastrarPedido(new PedidoDTO(true,Status.A_CAMINHO,pizzaList,produtosList,20,
+				false,false,funcionarioPed,"teste",usuario,false,LocalDate.now()));
+		Assertions.assertEquals("Pedido cadastrado com sucesso!!", pedido.getBody());
+	}
+
+	@Test
+	void testPUTpedido(){
+		Usuario usuario = new Usuario(1L,"usuarioPUT", "45998306020");
+		Funcionario funcionarioPut = new Funcionario(1L,"funcionarioPUT");
+		PedidoDTO pedidoDTO = new PedidoDTO(true,Status.A_CAMINHO,pizzaList,produtosList,20,
+				false,false,funcionarioPut,"teste",usuario,false,LocalDate.now());
+		pedidoDTO.setId(1L);
+
+		var pedido = pedidoController.editaPedido(1L, pedidoDTO);
+		Assertions.assertEquals("Pedido EDITADO com sucesso!!", pedido.getBody());
+	}
+
+	@Test
+	void testPUTerrado(){
+
+		Usuario usuarioErrado = new Usuario(1L, "UsuarioPutErro", "990903333");
+		Funcionario funcionarioErrado = new Funcionario(1L, "funcPUTerrado");
+		PedidoDTO pedidoDTO = new PedidoDTO(true,Status.A_CAMINHO,pizzaList,produtosList,20,
+				false,false,funcionarioErrado,"teste",usuarioErrado,false,LocalDate.now());
+		pedidoDTO.setId(1L);
+
+		var pedido = pedidoController.editaPedido(10L, pedidoDTO);
+		Assertions.assertEquals("Nao foi possivel indentificar o pedido informado",pedido.getBody());
+	}
+	@Test
+	void testDELETEpedido(){
+		var pedido = pedidoController.deletaPedido(2L);
+		Assertions.assertEquals("Pedido Excluido com sucesso!!",pedido.getBody());
+	}
+
 
 }

@@ -4,7 +4,6 @@ import br.com.uniamerica.pizzariaBack.entity.Funcionario;
 import br.com.uniamerica.pizzariaBack.repository.FuncionarioRep;
 import br.com.uniamerica.pizzariaBack.service.FuncionarioService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,8 +36,9 @@ public class FuncionarioController {
             funcionarioService.cadastrarFuncionario(funcionarioDTO);
             return ResponseEntity.ok("Registro cadastrado com sucesso");
         }
-        catch (Exception e){
-            return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
+        catch (RuntimeException e){
+            String errorMessage = getErrorMessage(e);
+            return ResponseEntity.internalServerError().body(errorMessage);
         }
     }
 
@@ -53,9 +53,9 @@ public class FuncionarioController {
             this.funcionarioService.atualizaFuncionario(funcionarioDTO);
             return ResponseEntity.ok("Registro EDITADO com Sucesso");
         }
-        catch (DataIntegrityViolationException e){
-            return ResponseEntity.internalServerError()
-                    .body("Error: " + e.getMessage());
+        catch (RuntimeException e){
+            String errorMessage = getErrorMessage(e);
+            return ResponseEntity.internalServerError().body(errorMessage);
         }
     }
 
@@ -67,7 +67,12 @@ public class FuncionarioController {
             return ResponseEntity.ok("Funcionário excluído");
         }
         catch (RuntimeException e){
-            return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
+            String errorMessage = getErrorMessage(e);
+            return ResponseEntity.internalServerError().body(errorMessage);
         }
+    }
+
+    private String getErrorMessage(Exception e) {
+        return "Error: " + e.getMessage();
     }
 }
