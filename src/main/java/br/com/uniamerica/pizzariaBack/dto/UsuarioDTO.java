@@ -15,4 +15,9 @@ public class UsuarioDTO extends AbstractDTO{
 
     private List<Endereco> enderecos;
 
+    public UsuarioDTO(){}
+    public UsuarioDTO(String nomeUsuario, String telefone) {
+        this.nomeUsuario = nomeUsuario;
+        this.telefone = telefone;
+    }
 }

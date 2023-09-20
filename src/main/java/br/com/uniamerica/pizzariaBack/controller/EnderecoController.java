@@ -8,6 +8,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping (value = "/api/endereco")
 public class EnderecoController {
@@ -20,17 +22,17 @@ public class EnderecoController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> findByIdPath(@PathVariable("id") final Long id){
+    public ResponseEntity<Endereco> findByIdPath(@PathVariable("id") final Long id){
         final Endereco endereco = this.enderecoRep.findById(id).orElse(null);
         return ResponseEntity.ok(endereco);
     }
     @GetMapping("/lista")
-    public ResponseEntity <?> ListaEnderecos(){
+    public ResponseEntity <List<Endereco>> ListaEnderecos(){
         return ResponseEntity.ok(this.enderecoRep.findAll());
     }
 
     @PostMapping
-    public ResponseEntity<?> cadastrarEndereco(@RequestBody final EnderecoDTO enderecoDTO){
+    public ResponseEntity<String> cadastrarEndereco(@RequestBody final EnderecoDTO enderecoDTO){
         try {
             this.enderecoService.cadastrarEndereco(enderecoDTO);
             return ResponseEntity.ok("Endereco cadastrado com sucesso!");
@@ -41,7 +43,7 @@ public class EnderecoController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> editaEnd(@PathVariable("id") final Long id, @RequestBody final EnderecoDTO enderecoDTO){
+    public ResponseEntity<String> editaEnd(@PathVariable("id") final Long id, @RequestBody final EnderecoDTO enderecoDTO){
         try {
             final Endereco endereco1 = this.enderecoRep.findById(id).orElse(null);
 
@@ -58,7 +60,7 @@ public class EnderecoController {
     }
 
     @DeleteMapping("/deleta/{id}")
-    public ResponseEntity<?> deletaEnd(@PathVariable Long id){
+    public ResponseEntity<String> deletaEnd(@PathVariable Long id){
         try {
             this.enderecoService.excluiEnd(id);
             return ResponseEntity.ok("Endereco Exluido com Sucesso!");

@@ -8,6 +8,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(value = "/api/usuario")
 public class UsuarioController {
@@ -24,7 +26,7 @@ public class UsuarioController {
         return ResponseEntity.ok(usuario);
     }
     @GetMapping("/lista")
-    public ResponseEntity <?> ListaUsers(){
+    public ResponseEntity <List<Usuario>> ListaUsers(){
         return ResponseEntity.ok(this.usuarioRep.findAll());
     }
 
@@ -35,7 +37,7 @@ public class UsuarioController {
     }
 
     @PostMapping
-    public ResponseEntity<?> cadastrarUser(@RequestBody final UsuarioDTO usuarioDTO){
+    public ResponseEntity<String> cadastrarUser(@RequestBody final UsuarioDTO usuarioDTO){
         try {
             usuarioService.cadastraUsuario(usuarioDTO);
             return ResponseEntity.ok("Usuario cadastrado com sucesso!!");

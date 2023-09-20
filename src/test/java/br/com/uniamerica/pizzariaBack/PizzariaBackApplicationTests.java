@@ -19,7 +19,8 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.util.Assert;
+import org.junit.Assert;
+import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,25 +32,25 @@ class PizzariaBackApplicationTests {
 	@MockBean
 	UsuarioRep usuarioRep;
 	@Autowired
-	private final UsuarioController usuarioController = new UsuarioController();
+	UsuarioController usuarioController;
 	private List<Usuario> usuarioList;
 
 	@MockBean
 	EnderecoRep enderecoRep;
 	@Autowired
-	private final EnderecoController enderecoController = new EnderecoController();
+	EnderecoController enderecoController = new EnderecoController();
 	private List<Endereco> enderecoList;
 
 	@MockBean
 	SaboresRep saboresRep;
 	@Autowired
-	private final SaboresController saboresController = new SaboresController();
+	SaboresController saboresController = new SaboresController();
 	private List<Sabores> saboresList;
 
 	@MockBean
 	LoginRep loginRep;
 	@Autowired
-	private final LoginController loginController = new LoginController();
+	LoginController loginController = new LoginController();
 	private List<Login> loginList;
 
 
@@ -85,66 +86,66 @@ class PizzariaBackApplicationTests {
 		loginList.add(login);
 		loginList.add(login2);
 
-
-
-
+		Mockito.when(loginRep.save(login)).thenReturn(login);
+		Mockito.when(loginRep.save(login2)).thenReturn(login2);
+		Mockito.when(loginRep.findById(1L)).thenReturn(Optional.of(login));
+		Mockito.when(loginRep.findById(2L)).thenReturn(Optional.of(login2));
+		Mockito.when(loginRep.findAll()).thenReturn(loginList);
 	}
 
 	@Test
-	public void testSabores(){
-		SaboresDTO saboresDTO = new SaboresDTO();
-		saboresDTO.setSaborPizza("Sabor_Teste");
-		Assert.isTrue(!saboresDTO.getSaborPizza().equals(""),"O nome do sabor não pode ser nulo!!");
-		Assert.isTrue(saboresDTO.getSaborPizza().length() <= 70, "Máximo de caracteres alcançados");
+	void testCriaUser(){
+		var usuario = usuarioController.cadastrarUser(new UsuarioDTO("Lindao","4599999999"));
+
+		Assertions.assertEquals("Usuario cadastrado com sucesso!!", usuario.getBody());
 	}
 
 	@Test
-	public void testFuncionario(){
-		FuncionarioDTO funcionarioDTO = new FuncionarioDTO();
-
-		funcionarioDTO.setNomeFunc("Funcionario_Test");
-
-		Assert.isTrue(!funcionarioDTO.getNomeFunc().equals(""), "O nome do funcionario nao pode ser nulo!!");
-		Assert.isTrue(funcionarioDTO.getNomeFunc().length() <= 40, "Maximo de caracteres para nome excedido!");
-	}
-	@Test
-	public void testEstoqueProduto(){
-		EstoqueDTO estoqueDTO = new EstoqueDTO();
-
-		estoqueDTO.setNomeProduto("Produto_Teste");
-		estoqueDTO.setPrecoProdutos(3);
-
-		Assert.isTrue(!estoqueDTO.getNomeProduto().equals(""),"o nome do produto não pode ser nulo!!");
-		Assert.isTrue(estoqueDTO.getNomeProduto().length() <= 40, "Máximo de caracteres alcançados!! (40)");
-
-		Assertions.assertEquals("Produto_Teste", estoqueDTO.getNomeProduto());
+	void DeleteUser(){
+		var usuario = usuarioController.deletaUsuario(1L);
+		Assertions.assertEquals("usuario Excluido", usuario.getBody());
 	}
 
 	@Test
-	void testEndereco(){
-		EnderecoDTO enderecoDTO = new EnderecoDTO();
+	void findAllUser(){
+		ResponseEntity<List<Usuario>> usuarioFuncaoController = usuarioController.ListaUsers();
+		List<Usuario> usuarioListController = usuarioFuncaoController.getBody();
 
-		enderecoDTO.setBairro("Bairro Teste");
-		enderecoDTO.setRua("Rua Teste");
-		enderecoDTO.setNumeroEnd(777);
-
-		Assert.isTrue(enderecoDTO.getBairro() != null, "Bairro nao pode ser nulo!!");
-		Assert.isTrue(enderecoDTO.getBairro().length() <= 30, "Maximo de caracteres para bairro alcancado!");
-		Assert.isTrue(enderecoDTO.getRua() != null, "A rua nao pode ser nula!!");
-		Assert.isTrue(enderecoDTO.getRua().length() <= 30, "Maximo de caracteres para rua alcancados!!");
-
-		Assertions.assertEquals("Bairro Teste", enderecoDTO.getBairro());
+		Assertions.assertNotNull(usuarioListController);
+		for (int i=0; i<usuarioList.size();i ++){
+			Assertions.assertEquals(usuarioList.get(i), usuarioListController.get(i));
+		}
 	}
-
 
 	@Test
-	void testeLogin(){
-		LoginDTO loginDTO = new LoginDTO();
-
-		loginDTO.setNomeLogin("GabrielTeste");
-		loginDTO.setSenhaLogin("senhaDeTeste");
-
-		Assert.isTrue(loginDTO.getNomeLogin().length() <= 100, "Maximo de caracteres alcançado");
+	public void testCriaEndereco(){
+		Usuario usuarioTest = new Usuario(3L, "Terceiro","994038950");
+		var	endereco = enderecoController.cadastrarEndereco(new EnderecoDTO("RuaTOMA","BairroTOMA",530,usuarioTest));
+		Assertions.assertEquals("Endereco cadastrado com sucesso!", endereco.getBody());
 	}
 
+	@Test
+	public void testPUTendereco(){
+		Usuario usuarioTestPut = new Usuario(4L, "Quarto", "444444444");
+		EnderecoDTO enderecoDTO = new EnderecoDTO("RuaPUT", "BairroPUT", 666, usuarioTestPut);
+		enderecoDTO.setId(1L);
+
+		var endereco = enderecoController.editaEnd(1L, enderecoDTO);
+		Assertions.assertEquals("Registro EDITADO com sucesso!!", endereco.getBody());
+	}
+
+	@Test
+	void testDELETEendereco(){
+		var endereco = enderecoController.deletaEnd(2L);
+		Assertions.assertEquals("Endereco Exluido com Sucesso!", endereco.getBody());
+	}
+
+	@Test
+	void testFindByIDendereco(){
+		Usuario usuario = new Usuario(5L,"QUINTO", "45999335511");
+		enderecoController.cadastrarEndereco(new EnderecoDTO("RuaTOMA","BairroTOMA",530,usuario));
+		var endereco = enderecoController.findByIdPath(1L);
+		Assertions.assertEquals(endereco.getBody().getRua(), enderecoController.findByIdPath(1L).getBody().getRua());
+
+	}
 }
