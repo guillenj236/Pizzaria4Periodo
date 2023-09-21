@@ -2,12 +2,10 @@ package br.com.uniamerica.pizzariaback.dto;
 
 import br.com.uniamerica.pizzariaback.entity.*;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import java.time.LocalDate;
 import java.util.List;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
 public class PedidoDTO extends AbstractDTO{
 
     private boolean entrega;
@@ -22,6 +20,10 @@ public class PedidoDTO extends AbstractDTO{
     private Usuario usuario;
     private boolean delivery;
     private LocalDate dataPedido;
+
+    public PedidoDTO(){
+
+    }
 
     public PedidoDTO(boolean entrega, Status status, List<Pizza> pizzas, List<Produtos> produtos, float pedidopreco,
                      boolean pagamentoCartao, boolean pagamentoDinheiro, Funcionario funcionario, String observacao,
