@@ -197,11 +197,28 @@ class PizzariaBackApplicationTests {
 
 		Assertions.assertEquals("Usuario cadastrado com sucesso!!", usuario.getBody());
 	}
+	@Test
+	void UsuarioErradoCriarTest(){
+		var usuario = usuarioController.cadastrarUser(new UsuarioDTO());
+		Assertions.assertEquals("Error: Cannot invoke \"String.length()\" because the return value of \"br.com.uniamerica.pizzariaback.entity.Usuario.getTelefone()\" is null",usuario.getBody());
+	}
 
 	@Test
 	void DeleteUser(){
 		var usuario = usuarioController.deletaUsuario(1L);
 		Assertions.assertEquals("usuario Excluido", usuario.getBody());
+	}
+	@Test
+	void DeleteUserErrado(){
+		var usuario = usuarioController.deletaUsuario(10L);
+		Assertions.assertEquals("Error: Não foi possivel identificar o usuario informado.",usuario.getBody());
+	}
+
+	@Test
+	void findByIdUser(){
+		usuarioController.cadastrarUser(new UsuarioDTO("Louco","45999999999"));
+		var user = usuarioController.findByIdPath(1L);
+		Assertions.assertEquals(Objects.requireNonNull(user.getBody()).getNomeUsuario(), Objects.requireNonNull(usuarioController.findByIdPath(1L).getBody()).getNomeUsuario());
 	}
 
 	@Test
@@ -221,7 +238,11 @@ class PizzariaBackApplicationTests {
 		var	endereco = enderecoController.cadastrarEndereco(new EnderecoDTO("RuaTOMA","BairroTOMA",530,usuarioTest));
 		Assertions.assertEquals("Endereco cadastrado com sucesso!", endereco.getBody());
 	}
-
+	@Test
+	void criaErradoEndereco(){
+		var endereco = enderecoController.cadastrarEndereco(new EnderecoDTO());
+		Assertions.assertEquals("Error: Bairro nao pode ser nulo!!",endereco.getBody());
+	}
 	@Test
 	 void testPUTendereco(){
 		Usuario usuarioTestPut = new Usuario(4L, "Quarto", "444444444");
@@ -231,11 +252,24 @@ class PizzariaBackApplicationTests {
 		var endereco = enderecoController.editaEnd(1L, enderecoDTO);
 		Assertions.assertEquals("Registro EDITADO com sucesso!!", endereco.getBody());
 	}
+	@Test
+	void enderecoPUTerradoTest(){
+		Usuario usuarioTestPut = new Usuario(4L, "Quarto", "444444444");
+		EnderecoDTO enderecoDTO = new EnderecoDTO("RuaPUT", "BairroPUT", 666, usuarioTestPut);
+		enderecoDTO.setId(1L);
 
+		var endereco = enderecoController.editaEnd(10L, enderecoDTO);
+		Assertions.assertEquals("Nao foi possivel indentificar o endereco informado",endereco.getBody());
+	}
 	@Test
 	void testDELETEendereco(){
 		var endereco = enderecoController.deletaEnd(2L);
 		Assertions.assertEquals("Endereco Exluido com Sucesso!", endereco.getBody());
+	}
+	@Test
+	void deleteErradoEnderecoTest(){
+		var endereco = enderecoController.deletaEnd(20L);
+		Assertions.assertEquals("Error: Não foi possivel identificar o endereco informado.",endereco.getBody());
 	}
 
 	@Test
@@ -262,7 +296,11 @@ class PizzariaBackApplicationTests {
 		var funcionario = funcionarioController.cadastrarFuncionario(new FuncionarioDTO("Morador"));
 		Assertions.assertEquals("Registro cadastrado com sucesso",funcionario.getBody());
 	}
-
+	@Test
+	void funcionarioCriarErrado(){
+		var funcionario = funcionarioController.cadastrarFuncionario(new FuncionarioDTO());
+		Assertions.assertEquals("Error: Cannot invoke \"String.equals(Object)\" because the return value of \"br.com.uniamerica.pizzariaback.entity.Funcionario.getNomeFunc()\" is null",funcionario.getBody());
+	}
 	@Test
 	void testPUTfuncionario(){
 		FuncionarioDTO funcionarioDTO = new FuncionarioDTO("FuncionarioPUT");
@@ -271,11 +309,24 @@ class PizzariaBackApplicationTests {
 		var funcionario = funcionarioController.editaFunc(1L, funcionarioDTO);
 		Assertions.assertEquals("Registro EDITADO com Sucesso", funcionario.getBody());
 	}
+	@Test
+	void erradoPUTtest(){
+		FuncionarioDTO funcionarioDTO = new FuncionarioDTO("FuncionarioPUT");
+		funcionarioDTO.setId(1L);
+
+		var funcionario = funcionarioController.editaFunc(10L, funcionarioDTO);
+		Assertions.assertEquals("Nao foi possivel indentificar o registro informado", funcionario.getBody());
+	}
 
 	@Test
 	void testDELETEfunc(){
 		var funcionarioDelete = funcionarioController.deletaFuncionario(1L);
 		Assertions.assertEquals("Funcionário excluído",funcionarioDelete.getBody());
+	}
+	@Test
+	void deleteErradoFuncTest(){
+		var funcionarioDelete = funcionarioController.deletaFuncionario(11L);
+		Assertions.assertEquals("Error: Não foi possivel identificar o funcionario informado.", funcionarioDelete.getBody());
 	}
 
 	@Test
