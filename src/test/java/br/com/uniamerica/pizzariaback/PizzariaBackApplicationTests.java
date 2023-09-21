@@ -202,6 +202,20 @@ class PizzariaBackApplicationTests {
 		var usuario = usuarioController.cadastrarUser(new UsuarioDTO());
 		Assertions.assertEquals("Error: Cannot invoke \"String.length()\" because the return value of \"br.com.uniamerica.pizzariaback.entity.Usuario.getTelefone()\" is null",usuario.getBody());
 	}
+	@Test
+	void testPUTusuario(){
+		Usuario usuario = new Usuario(1L,"nome","999999999");
+		var editaUser = usuarioController.editarUsuario(1L, usuario);
+		Assertions.assertEquals("USUARIO editado com Sucesso",editaUser.getBody());
+	}
+	@Test
+	void testPUTerradoUSuario(){
+		Usuario usuario = new Usuario(1L,"nome","999999999");
+		var editaUser = usuarioController.editarUsuario(7L, usuario);
+		Assertions.assertEquals("Error: Nao foi possivel indentificar o usuario informado",editaUser.getBody());
+
+	}
+
 
 	@Test
 	void DeleteUser(){
@@ -356,6 +370,18 @@ class PizzariaBackApplicationTests {
 	void cadastraErradoEstoqueTest(){
 		var estoque = estoqueProdsController.cadastrarEstoque(new EstoqueDTO());
 		Assertions.assertEquals("Error: Cannot invoke \"String.equals(Object)\" because the return value of \"br.com.uniamerica.pizzariaback.entity.EstoqueProds.getNomeProduto()\" is null",estoque.getBody());
+	}
+	@Test
+	void testPUTestoque(){
+		EstoqueProds estoqueProds = new EstoqueProds(1L, 20,"DeuCerto");
+		var estoque = estoqueProdsController.editarEstoque(1L,estoqueProds);
+		Assertions.assertEquals("Produto editado no estoque com Sucesso",estoque.getBody());
+	}
+	@Test
+	void testPUTestoqueErrado(){
+		EstoqueProds estoqueProds = new EstoqueProds(1L, 20,"DeuCerto");
+		var estoque = estoqueProdsController.editarEstoque(10L,estoqueProds);
+		Assertions.assertEquals("Error: Nao foi possivel indentificar o registro informado",estoque.getBody());
 	}
 	@Test
 	void testDELETEestoque(){
@@ -543,6 +569,12 @@ class PizzariaBackApplicationTests {
 		var produto = produtosController.cadastrarProdutos(new ProdutosDTO(3,33,estoqueProds));
 		Assertions.assertEquals("Produto feito com sucesso", produto.getBody());
 	}
+	@Test
+	void testCriaProdutoERRADO(){
+		EstoqueProds estoqueProds = new EstoqueProds(2L,30,"AcaiTerra");
+		var produto = produtosController.cadastrarProdutos(new ProdutosDTO());
+		Assertions.assertEquals("Error: A quantidade do produto não pode ser nula!!",produto.getBody());
+	}
 
 	@Test
 	void testPUTproduto(){
@@ -552,11 +584,24 @@ class PizzariaBackApplicationTests {
 		var produto = produtosController.edita(1L, produtosDTO);
 		Assertions.assertEquals("Produto Editado com Sucesso",produto.getBody());
 	}
+	@Test
+	void testPUTprodutoERRADO(){
+		EstoqueProds estoqueProds = new EstoqueProds(5L,55,"NemSei");
+		ProdutosDTO produtosDTO =new ProdutosDTO(10,20,estoqueProds);
+		produtosDTO.setId(1L);
+		var produto = produtosController.edita(6L, produtosDTO);
+		Assertions.assertEquals("Nao foi possivel indentificar o registro informado",produto.getBody());
+	}
 
 	@Test
 	void testDELETEproduto(){
 		var produtoDelete = produtosController.deletaProdutos(2L);
 		Assertions.assertEquals("Produto Excluido Com Sucesso",produtoDelete.getBody());
+	}
+	@Test
+	void testDELETEprodutoERRADO(){
+		var produtoDelete = produtosController.deletaProdutos(221L);
+		Assertions.assertEquals("Error: Não foi possivel identificar o produto informado.",produtoDelete.getBody());
 	}
 
 	@Test
@@ -586,6 +631,13 @@ class PizzariaBackApplicationTests {
 				false,false,funcionarioPed,"teste",usuario,false,LocalDate.now()));
 		Assertions.assertEquals("Pedido cadastrado com sucesso!!", pedido.getBody());
 	}
+	@Test
+	void testCriarPedidoERRADO(){
+		Usuario usuario = new Usuario(1L,"Gabriel","45998036059");
+		Funcionario funcionarioPed = new Funcionario(1L,"Funcionario");
+		var pedido = pedidoController.cadastrarPedido(new PedidoDTO());
+		Assertions.assertEquals("Pedido cadastrado com sucesso!!",pedido.getBody());
+	}
 
 	@Test
 	void testPUTpedido(){
@@ -598,9 +650,8 @@ class PizzariaBackApplicationTests {
 		var pedido = pedidoController.editaPedido(1L, pedidoDTO);
 		Assertions.assertEquals("Pedido EDITADO com sucesso!!", pedido.getBody());
 	}
-
 	@Test
-	void testPUTerrado(){
+	void testPUTpedidoErrado(){
 
 		Usuario usuarioErrado = new Usuario(1L, "UsuarioPutErro", "990903333");
 		Funcionario funcionarioErrado = new Funcionario(1L, "funcPUTerrado");
@@ -615,6 +666,11 @@ class PizzariaBackApplicationTests {
 	void testDELETEpedido(){
 		var pedido = pedidoController.deletaPedido(2L);
 		Assertions.assertEquals("Pedido Excluido com sucesso!!",pedido.getBody());
+	}
+	@Test
+	void testDELETEpedidoERRADO(){
+		var pedido = pedidoController.deletaPedido(100L);
+		Assertions.assertEquals("Error: Não foi possivel identificar o pedido informado.",pedido.getBody());
 	}
 
 
