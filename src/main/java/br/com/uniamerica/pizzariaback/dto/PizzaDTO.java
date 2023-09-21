@@ -2,10 +2,8 @@ package br.com.uniamerica.pizzariaback.dto;
 import br.com.uniamerica.pizzariaback.entity.Sabores;
 import br.com.uniamerica.pizzariaback.entity.Tamanho;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import java.util.List;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
 public class PizzaDTO extends AbstractDTO{
 
@@ -16,6 +14,10 @@ public class PizzaDTO extends AbstractDTO{
     private int quantidadePizza;
 
     private Tamanho tamanho;
+
+    public  PizzaDTO(){
+
+    }
 
     public PizzaDTO(List<Sabores> sabores, float precoPizza, int quantidadePizza, Tamanho tamanho) {
         this.sabores = sabores;
