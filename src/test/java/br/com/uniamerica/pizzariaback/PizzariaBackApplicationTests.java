@@ -352,12 +352,22 @@ class PizzariaBackApplicationTests {
 		var estoque = estoqueProdsController.cadastrarEstoque(new EstoqueDTO(55,"Sorvete"));
 		Assertions.assertEquals("Produto cadastrado com sucesso", estoque.getBody());
 	}
-
+	@Test
+	void cadastraErradoEstoqueTest(){
+		var estoque = estoqueProdsController.cadastrarEstoque(new EstoqueDTO());
+		Assertions.assertEquals("Error: Cannot invoke \"String.equals(Object)\" because the return value of \"br.com.uniamerica.pizzariaback.entity.EstoqueProds.getNomeProduto()\" is null",estoque.getBody());
+	}
 	@Test
 	void testDELETEestoque(){
 		var estoque = estoqueProdsController.deletaNoEstoque(2L);
 
 		Assertions.assertEquals("Produto excluído com sucesso!!", estoque.getBody());
+	}
+	@Test
+	void deleteEstoqueErrado(){
+		var estoque = estoqueProdsController.deletaNoEstoque(10L);
+
+		Assertions.assertEquals("Error: Não foi possivel identificar o modelo informado.", estoque.getBody());
 	}
 
 	@Test
@@ -383,20 +393,39 @@ class PizzariaBackApplicationTests {
 		var sabor = saboresController.cadastrarSabores(new SaboresDTO("CalabresaTeste"));
 		Assertions.assertEquals("Registro cadastrado com sucesso", sabor.getBody());
 	}
-
+	@Test
+	void criaSaboresErrado(){
+		var sabor = saboresController.cadastrarSabores(new SaboresDTO());
+		Assertions.assertEquals("Error: Cannot invoke \"String.equals(Object)\" because the return value of \"br.com.uniamerica.pizzariaback.entity.Sabores.getSaborPizza()\" is null",sabor.getBody());
+	}
+	@Test
+	void putSabores(){
+		Sabores sabores = new Sabores(1L,"Teste");
+		var sabor = saboresController.editaSabor(1L, sabores);
+		Assertions.assertEquals("Sabor editado com Sucesso",sabor.getBody());
+	}
+	@Test
+	void putSaboresErrado(){
+		Sabores sabores = new Sabores(2L,"putErro");
+		var sabor = saboresController.editaSabor(7L,sabores);
+		Assertions.assertEquals("Error: Nao foi possivel indentificar o registro informado",sabor.getBody());
+	}
 	@Test
 	void testDELETEsabores(){
 		var sabor = saboresController.deletaSabor(2L);
 		Assertions.assertEquals("Sabor excluído com sucesso!!", sabor.getBody());
 	}
-
+	@Test
+	void testDeleteErrado(){
+		var sabor = saboresController.deletaSabor(27L);
+		Assertions.assertEquals("Error: Não foi possivel identificar o sabor informado.",sabor.getBody());
+	}
 	@Test
 	void FindByIdSabores(){
 		saboresController.cadastrarSabores(new SaboresDTO("PizzaID"));
 		var sabor = saboresController.findByIdPath(1L);
 		Assertions.assertEquals(Objects.requireNonNull(sabor.getBody()).getSaborPizza(), Objects.requireNonNull(saboresController.findByIdPath(1L).getBody()).getSaborPizza());
 	}
-
 	@Test
 	void testFindAllSabores(){
 		ResponseEntity<List<Sabores>> saborFuncaoController = saboresController.listaSabores();
@@ -413,9 +442,31 @@ class PizzariaBackApplicationTests {
 		Assertions.assertEquals("Login cadastrado com sucesso", login.getBody());
 	}
 	@Test
+	void testCriaLoginErrado(){
+		var login = loginController.cadastrarLogin(new LoginDTO());
+		Assertions.assertEquals("Error: Cannot invoke \"String.length()\" because the return value of \"br.com.uniamerica.pizzariaback.entity.Login.getNomeLogin()\" is null",login.getBody());
+	}
+	@Test
+	void testPUTLogin(){
+		Login login = new Login(1L,"admin","admin");
+		var loginPUT = loginController.editarUser(1L, login);
+		Assertions.assertEquals("LOGIN editado com Sucesso",loginPUT.getBody());
+	}
+	@Test
+	void testPutLoginErrado(){
+		Login login = new Login(2L,"admin","admin");
+		var loginError = loginController.editarUser(10L,login);
+		Assertions.assertEquals("Error: Nao foi possivel indentificar o login informado",loginError.getBody());
+	}
+	@Test
 	void testDELETElogin(){
 		var login = loginController.deleta(2L);
 		Assertions.assertEquals("Login Excluído com sucesso!!!", login.getBody());
+	}
+	@Test
+	void testDELETEloginERRADO(){
+		var login = loginController.deleta(100L);
+		Assertions.assertEquals("Error: Não foi possivel identificar o login informado.",login.getBody());
 	}
 	@Test
 	void testFindByIdLogin(){
@@ -439,20 +490,35 @@ class PizzariaBackApplicationTests {
 		var pizza = pizzaController.cadastrar(new PizzaDTO(saboresList,30,2,Tamanho.M));
 		Assertions.assertEquals("Pizza cadastrada com sucesso", pizza.getBody());
 	}
-
+	@Test
+	void testCriarPizzaERRADO(){
+		var pizza = pizzaController.cadastrar(new PizzaDTO());
+		Assertions.assertEquals("Error: Selecione ao menos um sabor na pizza!!",pizza.getBody());
+	}
 	@Test
 	void testPUTpizza(){
 		PizzaDTO pizzaDTO = new PizzaDTO(saboresList,55,1,Tamanho.GG);
 		pizzaDTO.setId(1L);
 		var pizza = pizzaController.editaPizza(1L, pizzaDTO);
 		Assertions.assertEquals("pizza EDITADA com Sucesso", pizza.getBody());
-
+	}
+	@Test
+	void testPUTpizzaErrado(){
+		PizzaDTO pizzaDTO = new PizzaDTO(saboresList,55,1,Tamanho.GG);
+		pizzaDTO.setId(1L);
+		var pizza = pizzaController.editaPizza(5L, pizzaDTO);
+		Assertions.assertEquals("Nao foi possivel indentificar a pizza informado", pizza.getBody());
 	}
 
 	@Test
 	void testDELETEpizza(){
 		var pizza = pizzaController.deleta(2L);
 		Assertions.assertEquals("Pizza excluída!!", pizza.getBody());
+	}
+	@Test
+	void testeDeletePizzaErrado(){
+		var pizza = pizzaController.deleta(500L);
+		Assertions.assertEquals("Error: Não foi possivel identificar o pizza informado.",pizza.getBody());
 	}
 	@Test
 	void testFindByIDpizza(){
