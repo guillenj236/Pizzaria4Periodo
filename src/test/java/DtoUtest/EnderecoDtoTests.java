@@ -5,7 +5,7 @@ import br.com.uniamerica.pizzariaback.entity.Usuario;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class EnderecoDtoTests {
+ class EnderecoDtoTests {
 
     Usuario usuario = new Usuario(1L, "A","45999690045");
     EnderecoDTO enderecoDTO = new EnderecoDTO("RuaDTO","BairroDTO",530,usuario);

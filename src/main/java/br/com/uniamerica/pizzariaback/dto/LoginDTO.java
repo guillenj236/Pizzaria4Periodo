@@ -1,9 +1,7 @@
 package br.com.uniamerica.pizzariaback.dto;
 import br.com.uniamerica.pizzariaback.entity.Usuario;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
 public class LoginDTO extends AbstractDTO {
 
