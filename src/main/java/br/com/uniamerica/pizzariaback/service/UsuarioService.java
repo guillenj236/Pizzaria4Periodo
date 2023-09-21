@@ -33,9 +33,7 @@ public class UsuarioService {
 
     @Transactional(rollbackFor = Exception.class)
     public void atualizaUsuario(Usuario usuario) {
-        final Usuario usuarioExistente = this.usuarioRep.findById(usuario.getId()).orElse(null);
-
-            this.usuarioRep.save(usuario);
+         this.usuarioRep.save(usuario);
 
     }
 
@@ -45,9 +43,15 @@ public class UsuarioService {
         final Usuario usuarioBanco = this.usuarioRep.findById(id).orElse(null);
 
         if (usuarioBanco == null || !usuarioBanco.getId().equals(id)){
-            throw new RuntimeException("Não foi possivel identificar o usuario informado.");
+            throw new RegistroNaoEncontradoException("Não foi possivel identificar o usuario informado.");
         }
         this.usuarioRep.save(usuarioBanco);
+    }
+
+    public static class RegistroNaoEncontradoException extends RuntimeException {
+        public RegistroNaoEncontradoException(String message) {
+            super(message);
+        }
     }
 
 }

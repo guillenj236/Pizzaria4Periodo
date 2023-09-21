@@ -50,7 +50,7 @@ public class SaboresController {
             final Sabores sabores1 = this.saboresRep.findById(id).orElse(null);
 
             if (sabores1 == null || !sabores1.getId().equals(sabores.getId())){
-                throw new RuntimeException("Nao foi possivel indentificar o registro informado");
+                throw new RegistroNaoEncontradoException("Nao foi possivel indentificar o registro informado");
             }
             return ResponseEntity.ok("Sabor editado com Sucesso");
         }
@@ -74,6 +74,12 @@ public class SaboresController {
 
     private String getErrorMessage(Exception e) {
         return "Error: " + e.getMessage();
+    }
+
+    public static class RegistroNaoEncontradoException extends RuntimeException {
+        public RegistroNaoEncontradoException(String message) {
+            super(message);
+        }
     }
 
 

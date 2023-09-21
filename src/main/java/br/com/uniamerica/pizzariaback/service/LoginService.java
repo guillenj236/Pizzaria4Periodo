@@ -46,8 +46,15 @@ public class LoginService {
         final Login loginBanco = this.loginRep.findById(id).orElse(null);
 
         if (loginBanco == null || !loginBanco.getId().equals(id)){
-            throw new RuntimeException("Não foi possivel identificar o login informado.");
+            throw new RegistroNaoEncontradoException("Não foi possivel identificar o login informado.");
         }
         this.loginRep.delete(loginBanco);
     }
+
+    public static class RegistroNaoEncontradoException extends RuntimeException {
+        public RegistroNaoEncontradoException(String message) {
+            super(message);
+        }
+    }
+
 }

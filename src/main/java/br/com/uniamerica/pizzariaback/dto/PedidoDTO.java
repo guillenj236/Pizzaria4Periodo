@@ -14,7 +14,7 @@ public class PedidoDTO extends AbstractDTO{
     private Status status;
     private List<Pizza> pizzas;
     private List<Produtos> produtos;
-    private float pedido_preco;
+    private float pedidopreco;
     private boolean pagamentoCartao;
     private boolean pagamentoDinheiro;
     private Funcionario funcionario;
@@ -23,14 +23,14 @@ public class PedidoDTO extends AbstractDTO{
     private boolean delivery;
     private LocalDate dataPedido;
 
-    public PedidoDTO(boolean entrega, Status status, List<Pizza> pizzas, List<Produtos> produtos, float pedido_preco,
+    public PedidoDTO(boolean entrega, Status status, List<Pizza> pizzas, List<Produtos> produtos, float pedidopreco,
                      boolean pagamentoCartao, boolean pagamentoDinheiro, Funcionario funcionario, String observacao,
                      Usuario usuario, boolean delivery, LocalDate dataPedido) {
         this.entrega = entrega;
         this.status = status;
         this.pizzas = pizzas;
         this.produtos = produtos;
-        this.pedido_preco = pedido_preco;
+        this.pedidopreco = pedidopreco;
         this.pagamentoCartao = pagamentoCartao;
         this.pagamentoDinheiro = pagamentoDinheiro;
         this.funcionario = funcionario;

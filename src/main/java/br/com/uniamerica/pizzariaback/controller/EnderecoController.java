@@ -26,7 +26,7 @@ public class EnderecoController {
         return ResponseEntity.ok(endereco);
     }
     @GetMapping("/lista")
-    public ResponseEntity <List<Endereco>> ListaEnderecos(){
+    public ResponseEntity <List<Endereco>> listaEnderecos(){
         return ResponseEntity.ok(this.enderecoRep.findAll());
     }
 

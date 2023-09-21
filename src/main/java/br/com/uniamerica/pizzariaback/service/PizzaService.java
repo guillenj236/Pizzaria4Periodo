@@ -75,8 +75,15 @@ public class PizzaService {
         final Pizza pizzaBanco = this.pizzaRep.findById(id).orElse(null);
 
         if (pizzaBanco == null || !pizzaBanco.getId().equals(id)){
-            throw new RuntimeException("Não foi possivel identificar o pizza informado.");
+            throw new RegistroNaoEncontradoException("Não foi possivel identificar o pizza informado.");
         }
         this.pizzaRep.delete(pizzaBanco);
     }
+
+    public static class RegistroNaoEncontradoException extends RuntimeException {
+        public RegistroNaoEncontradoException(String message) {
+            super(message);
+        }
+    }
+
 }

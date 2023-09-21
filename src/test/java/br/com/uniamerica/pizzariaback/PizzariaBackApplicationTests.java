@@ -216,14 +216,14 @@ class PizzariaBackApplicationTests {
 	}
 
 	@Test
-	public void testCriaEndereco(){
+	 void testCriaEndereco(){
 		Usuario usuarioTest = new Usuario(3L, "Terceiro","994038950");
 		var	endereco = enderecoController.cadastrarEndereco(new EnderecoDTO("RuaTOMA","BairroTOMA",530,usuarioTest));
 		Assertions.assertEquals("Endereco cadastrado com sucesso!", endereco.getBody());
 	}
 
 	@Test
-	public void testPUTendereco(){
+	 void testPUTendereco(){
 		Usuario usuarioTestPut = new Usuario(4L, "Quarto", "444444444");
 		EnderecoDTO enderecoDTO = new EnderecoDTO("RuaPUT", "BairroPUT", 666, usuarioTestPut);
 		enderecoDTO.setId(1L);
@@ -248,7 +248,7 @@ class PizzariaBackApplicationTests {
 
 	@Test
 	void testFindAllEndereco(){
-		ResponseEntity<List<Endereco>> enderecoFuncaoController = enderecoController.ListaEnderecos();
+		ResponseEntity<List<Endereco>> enderecoFuncaoController = enderecoController.listaEnderecos();
 		List<Endereco> enderecoListaController = enderecoFuncaoController.getBody();
 
 		Assertions.assertNotNull(enderecoListaController);
@@ -318,7 +318,7 @@ class PizzariaBackApplicationTests {
 
 	@Test
 	void testeFindAllEstoque(){
-		ResponseEntity<List<EstoqueProds>> estoqueFuncaoController = estoqueProdsController.ListaCompleta();
+		ResponseEntity<List<EstoqueProds>> estoqueFuncaoController = estoqueProdsController.listaCompleta();
 		List<EstoqueProds> estoqueListController = estoqueFuncaoController.getBody();
 
 		Assertions.assertNotNull(estoqueListController);
@@ -446,6 +446,8 @@ class PizzariaBackApplicationTests {
 	void testFindByIdProduto(){
 		EstoqueProds estoqueProds = new EstoqueProds(8L,40,"ProdutoX");
 		produtosController.cadastrarProdutos(new ProdutosDTO(7,70,estoqueProds));
+		var produtoId = produtosController.findByIdPath(1L);
+		Assertions.assertEquals(Objects.requireNonNull(produtoId.getBody()).getEstoqueProds(), Objects.requireNonNull(produtosController.findByIdPath(1L).getBody()).getEstoqueProds());
 	}
 	@Test
 	void testFindallProduto(){

@@ -28,12 +28,12 @@ public class ProdutosService {
         var produtos = new Produtos();
         BeanUtils.copyProperties(produtosDTO,produtos);
 
-        Assert.isTrue(produtos.getQuantidade_prod() != 0, "A quantidade do produto não pode ser nula!!");
+        Assert.isTrue(produtos.getQuantidadeprod() != 0, "A quantidade do produto não pode ser nula!!");
         Assert.isTrue(produtos.getEstoqueProds() != null, "O Produto não pode ser nulo!!");
 
         EstoqueProds estoqueProds = produtos.getEstoqueProds();
         Optional <EstoqueProds> estoqueTemp = estoqueProdRep.findById(estoqueProds.getId());
-        total += estoqueTemp.get().getPrecoProdutos() * produtos.getQuantidade_prod();
+        total += estoqueTemp.get().getPrecoProdutos() * produtos.getQuantidadeprod();
 
         produtos.setTotalprod(total);
 
@@ -60,8 +60,14 @@ public class ProdutosService {
         final Produtos produtoBanco = this.produtosRep.findById(id).orElse(null);
 
         if (produtoBanco == null || !produtoBanco.getId().equals(id)){
-            throw new RuntimeException("Não foi possivel identificar o produto informado.");
+            throw new RegistroNaoEncontradoException("Não foi possivel identificar o produto informado.");
         }
         this.produtosRep.delete(produtoBanco);
+    }
+
+    public static class RegistroNaoEncontradoException extends RuntimeException {
+        public RegistroNaoEncontradoException(String message) {
+            super(message);
+        }
     }
 }

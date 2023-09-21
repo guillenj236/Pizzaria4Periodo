@@ -27,7 +27,7 @@ public class EstoqueProdsController {
    }
 
     @GetMapping("/lista")
-    public ResponseEntity <List<EstoqueProds>> ListaCompleta(){
+    public ResponseEntity <List<EstoqueProds>> listaCompleta(){
         return ResponseEntity.ok(this.estoqueProdRep.findAll());
     }
 
@@ -50,7 +50,7 @@ public class EstoqueProdsController {
             final EstoqueProds estoqueProds1 = this.estoqueProdRep.findById(id).orElse(null);
 
             if (estoqueProds1 == null || !estoqueProds1.getId().equals(estoqueProds.getId())){
-                throw new RuntimeException("Nao foi possivel indentificar o registro informado");
+                throw new RegistroNaoEncontradoException("Nao foi possivel indentificar o registro informado");
             }
             return ResponseEntity.ok("Produto editado no estoque com Sucesso");
         }
@@ -79,4 +79,11 @@ public class EstoqueProdsController {
         return "Error: " + e.getMessage();
     }
 
+   public static class RegistroNaoEncontradoException extends RuntimeException {
+        public RegistroNaoEncontradoException(String message) {
+            super(message);
+        }
+    }
+
 }
+

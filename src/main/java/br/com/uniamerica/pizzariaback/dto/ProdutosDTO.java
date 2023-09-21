@@ -7,12 +7,12 @@ import lombok.EqualsAndHashCode;
 @Data
 public class ProdutosDTO extends AbstractDTO{
 
-    private int quantidade_prod;
+    private int quantidadeprod;
     private float totalprod;
     private EstoqueProds estoqueProds;
 
-    public ProdutosDTO(int quantidade_prod, float totalprod, EstoqueProds estoqueProds) {
-        this.quantidade_prod = quantidade_prod;
+    public ProdutosDTO(int quantidadeprod, float totalprod, EstoqueProds estoqueProds) {
+        this.quantidadeprod = quantidadeprod;
         this.totalprod = totalprod;
         this.estoqueProds = estoqueProds;
     }

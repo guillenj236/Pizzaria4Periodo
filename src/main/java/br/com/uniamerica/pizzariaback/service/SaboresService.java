@@ -34,8 +34,6 @@ public class SaboresService {
 
     public void atualizaSabor (Sabores sabores){
 
-        final Sabores saboresAttService = this.saboresRep.findById(sabores.getId()).orElse(null);
-
         this.saboresRep.save(sabores);
     }
 
@@ -45,8 +43,14 @@ public class SaboresService {
         final Sabores saboresBanco = this.saboresRep.findById(id).orElse(null);
 
         if (saboresBanco == null || !saboresBanco.getId().equals(id)){
-            throw new RuntimeException("Não foi possivel identificar o sabor informado.");
+            throw new RegistroNaoEncontradoException("Não foi possivel identificar o sabor informado.");
         }
         this.saboresRep.delete(saboresBanco);
+    }
+
+    public static class RegistroNaoEncontradoException extends RuntimeException {
+        public RegistroNaoEncontradoException(String message) {
+            super(message);
+        }
     }
 }

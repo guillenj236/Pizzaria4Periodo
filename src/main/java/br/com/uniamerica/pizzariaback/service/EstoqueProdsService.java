@@ -49,9 +49,16 @@ public class EstoqueProdsService {
         final EstoqueProds estoqueBanco = this.estoqueProdRep.findById(id).orElse(null);
 
         if (estoqueBanco == null || !estoqueBanco.getId().equals(id)){
-            throw new RuntimeException("Não foi possivel identificar o modelo informado.");
+            throw new RegistroNaoEncontradoException("Não foi possivel identificar o modelo informado.");
         }
         this.estoqueProdRep.delete(estoqueBanco);
 
     }
+
+    public static class RegistroNaoEncontradoException extends RuntimeException {
+        public RegistroNaoEncontradoException(String message) {
+            super(message);
+        }
+    }
+
 }

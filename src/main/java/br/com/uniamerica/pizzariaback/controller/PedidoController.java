@@ -56,13 +56,13 @@ public class PedidoController {
 
     @GetMapping("/totaldia")
     public RelatorioDiaDTO getTotalPedidosPorData(@RequestParam("data") LocalDate data){
-        Long totalPedidos = pedidoService.TotalPedidosPorData(data);
-        Long totalPedidosCartao = pedidoService.TotalPagamentoCartao(data);
-        Long totalPedidosDinheiro = pedidoService.TotalPagamentoDinheiro(data);
-        Long totalPedidosDelivery = pedidoService.TotalPedidosDelivery(data);
-        Long totalPedidosBalcao = pedidoService.TotalPedidosBalcao(data);
-        Long totalPedidosPagos = pedidoService.TotalPagos(data);
-        Long totalPedidosCancelados = pedidoService.TotalCancelados(data);
+        Long totalPedidos = pedidoService.totalPedidosPorData(data);
+        Long totalPedidosCartao = pedidoService.totalPagamentoCartao(data);
+        Long totalPedidosDinheiro = pedidoService.totalPagamentoDinheiro(data);
+        Long totalPedidosDelivery = pedidoService.totalPedidosDelivery(data);
+        Long totalPedidosBalcao = pedidoService.totalPedidosBalcao(data);
+        Long totalPedidosPagos = pedidoService.totalPagos(data);
+        Long totalPedidosCancelados = pedidoService.totalCancelados(data);
 
         RelatorioDiaDTO relatorioDiaDTO = new RelatorioDiaDTO();
         relatorioDiaDTO.setTotalPedidos(totalPedidos);
@@ -114,7 +114,7 @@ public class PedidoController {
             if (pedido1 == null || !pedido1.getId().equals(pedido.getId())){
                 return ResponseEntity.internalServerError().body("Nao foi posivel identificar o pedido informado");
             }
-            this.pedidoService.FinalizaPedido(pedido);
+            this.pedidoService.finalizaPedido(pedido);
             return ResponseEntity.ok("PEDIDO FINALIZADO");
         }
         catch (RuntimeException e){

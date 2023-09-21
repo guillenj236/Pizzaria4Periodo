@@ -8,8 +8,8 @@ import lombok.Setter;
 public class Produtos extends AbstractEntity{
 
     @Getter @Setter
-    @Column (name = "quantidade_prod", nullable = false, length = 2)
-    private int quantidade_prod;
+    @Column (name = "quantidadeprod", nullable = false, length = 2)
+    private int quantidadeprod;
 
     @Getter @Setter
     @Column(name= "totalprod")
@@ -23,9 +23,9 @@ public class Produtos extends AbstractEntity{
     public Produtos(){
 
     }
-    public Produtos(Long id,int quantidade_prod, float totalprod, EstoqueProds estoqueProds) {
+    public Produtos(Long id,int quantidadeprod, float totalprod, EstoqueProds estoqueProds) {
         this.id = id;
-        this.quantidade_prod = quantidade_prod;
+        this.quantidadeprod = quantidadeprod;
         this.totalprod = totalprod;
         this.estoqueProds = estoqueProds;
     }

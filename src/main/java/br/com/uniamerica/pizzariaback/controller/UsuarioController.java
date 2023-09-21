@@ -53,7 +53,7 @@ public class UsuarioController {
             usuarioService.atualizaUsuario(usuario);
             final Usuario usuario1 = this.usuarioRep.findById(id).orElse(null);
             if (usuario1 == null || !usuario1.getId().equals(usuario.getId())){
-                throw new RuntimeException("Nao foi possivel indentificar o usuario informado");
+                throw new RegistroNaoEncontradoException("Nao foi possivel indentificar o usuario informado");
             }
             return ResponseEntity.ok("USUARIO editado com Sucesso");
         }
@@ -78,5 +78,12 @@ public class UsuarioController {
     private String getErrorMessage(Exception e) {
         return "Error: " + e.getMessage();
     }
+
+    public static class RegistroNaoEncontradoException extends RuntimeException {
+        public RegistroNaoEncontradoException(String message) {
+            super(message);
+        }
+    }
+
 
 }

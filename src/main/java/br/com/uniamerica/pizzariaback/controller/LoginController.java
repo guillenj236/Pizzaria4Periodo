@@ -48,7 +48,7 @@ public class LoginController {
          final Login login1 = this.loginRep.findById(id).orElse(null);
 
             if (login1 == null || !login1.getId().equals(login.getId())){
-                throw new RuntimeException("Nao foi possivel indentificar o login informado");
+                throw new RegistroNaoEncontradoException("Nao foi possivel indentificar o login informado");
             }
             return ResponseEntity.ok("LOGIN editado com Sucesso");
         }
@@ -76,4 +76,10 @@ public class LoginController {
         return "Error: " + e.getMessage();
     }
 
+    public static class RegistroNaoEncontradoException extends RuntimeException {
+        public RegistroNaoEncontradoException(String message) {
+            super(message);
+        }
+
+    }
 }

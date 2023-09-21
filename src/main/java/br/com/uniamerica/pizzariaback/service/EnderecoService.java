@@ -34,10 +34,11 @@ public class EnderecoService {
     public void atualizaEndereco(EnderecoDTO enderecoDTO){
         Endereco enderecoExistente = this.enderecoRep.findById(enderecoDTO.getId()).orElse(null);
 
+        if (enderecoExistente != null) {
             BeanUtils.copyProperties(enderecoDTO, enderecoExistente);
-
-
             this.enderecoRep.save(enderecoExistente);
+        }
+
 
     }
 
@@ -46,9 +47,16 @@ public class EnderecoService {
 
         final Endereco enderecoBanco = this.enderecoRep.findById(id).orElse(null);
 
-        if (enderecoBanco == null || enderecoBanco.getId()!=(id)){
-            throw new RuntimeException("Não foi possivel identificar o endereco informado.");
+        if (enderecoBanco == null || !enderecoBanco.getId().equals(id)){
+            throw new RegistroNaoEncontradoException("Não foi possivel identificar o endereco informado.");
         }
         this.enderecoRep.delete(enderecoBanco);
     }
+
+    public static class RegistroNaoEncontradoException extends RuntimeException {
+        public RegistroNaoEncontradoException(String message) {
+            super(message);
+        }
+    }
+
 }

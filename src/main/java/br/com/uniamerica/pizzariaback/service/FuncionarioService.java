@@ -46,9 +46,15 @@ public class FuncionarioService {
         final Funcionario funcionarioBanco = this.funcionarioRep.findById(id).orElse(null);
 
         if (funcionarioBanco == null || !funcionarioBanco.getId().equals(id)){
-            throw new RuntimeException("Não foi possivel identificar o funcionario informado.");
+            throw new RegistroNaoEncontradoException("Não foi possivel identificar o funcionario informado.");
         }
         this.funcionarioRep.delete(funcionarioBanco);
+    }
+
+    public static class RegistroNaoEncontradoException extends RuntimeException {
+        public RegistroNaoEncontradoException(String message) {
+            super(message);
+        }
     }
 
 }

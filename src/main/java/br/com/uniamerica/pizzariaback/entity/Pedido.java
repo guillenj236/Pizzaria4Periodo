@@ -32,8 +32,8 @@ public class Pedido extends AbstractEntity{
     private List<Produtos> produtos;
 
     @Getter @Setter
-    @Column (name = "pedido_preco")
-    private float pedido_preco;
+    @Column (name = "pedidopreco")
+    private float pedidopreco;
     @Getter @Setter
     @Column (name = "pagamentoCartao")
     private boolean pagamentoCartao;
@@ -72,13 +72,13 @@ public class Pedido extends AbstractEntity{
 
     }
 
-    public Pedido(Long id,boolean entrega, Status status, List<Pizza> pizzas, List<Produtos> produtos, float pedido_preco, boolean pagamentoCartao, boolean pagamentoDinheiro, Funcionario funcionario, String observacao, LocalDateTime cadastro, Usuario usuario, LocalDate dataPedido, boolean delivery) {
+    public Pedido(Long id,boolean entrega, Status status, List<Pizza> pizzas, List<Produtos> produtos, float pedidopreco, boolean pagamentoCartao, boolean pagamentoDinheiro, Funcionario funcionario, String observacao, LocalDateTime cadastro, Usuario usuario, LocalDate dataPedido, boolean delivery) {
        this.id = id;
         this.entrega = entrega;
         this.status = status;
         this.pizzas = pizzas;
         this.produtos = produtos;
-        this.pedido_preco = pedido_preco;
+        this.pedidopreco = pedidopreco;
         this.pagamentoCartao = pagamentoCartao;
         this.pagamentoDinheiro = pagamentoDinheiro;
         this.funcionario = funcionario;

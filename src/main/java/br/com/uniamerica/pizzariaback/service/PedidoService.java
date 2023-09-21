@@ -32,8 +32,6 @@ public class PedidoService {
         var pedido = new Pedido();
         BeanUtils.copyProperties(pedidoDTO,pedido);
 
-        System.out.println(pedido.getPizzas().size());
-
         if (pedido.isPagamentoCartao()){
             pedido.setPagamentoDinheiro(false);
         }else if (pedido.isPagamentoDinheiro()){
@@ -53,11 +51,10 @@ public class PedidoService {
 
                 Optional<Produtos> produtoTemp = produtosRep.findById(produtos.getId());
                 total += produtoTemp.get().getTotalprod();
-                System.out.println(totalProdutos);
             }
         }
 
-        pedido.setPedido_preco(total+totalProdutos);
+        pedido.setPedidopreco(total+totalProdutos);
 
         pedido.setStatus(Status.ATIVO);
 
@@ -84,7 +81,7 @@ public class PedidoService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void FinalizaPedido (Pedido pedido){
+    public void finalizaPedido (Pedido pedido){
 
         Pedido pedidoFinal = this.pedidoRep.findById(pedido.getId()).orElse(null);
 
@@ -102,7 +99,7 @@ public class PedidoService {
         final Pedido pedidoBanco = this.pedidoRep.findById(id).orElse(null);
 
         if (pedidoBanco == null || !pedidoBanco.getId().equals(id)){
-            throw new RuntimeException("Não foi possivel identificar o pedido informado.");
+            throw new RegistroNaoEncontradoException("Não foi possivel identificar o pedido informado.");
         }
         this.pedidoRep.delete(pedidoBanco);
     }
@@ -130,13 +127,13 @@ public class PedidoService {
             }
             for (Produtos produtos : pedido.getProdutos()){
                 writer.write("Nome do produto: " + produtos.getEstoqueProds().getNomeProduto() + "\n");
-                writer.write("Quantidade: " + produtos.getQuantidade_prod() + "\n");
+                writer.write("Quantidade: " + produtos.getQuantidadeprod() + "\n");
             }
             writer.write("Observacoes: " + pedido.getObservacao());
 
-            writer.write("Total do pedido: " + pedido.getPedido_preco());
+            writer.write("Total do pedido: " + pedido.getPedidopreco());
         }catch (IOException e) {
-            System.out.println("Erro ao salvar o arquivo: " + e.getMessage() + "\n");
+            System.err.println("Erro ao salvar o arquivo: " + e.getMessage() + "\n");
         }
     }
 
@@ -156,34 +153,41 @@ public class PedidoService {
             }
             for (Produtos produtos : pedido.getProdutos()){
                 writer.write("Nome do produto: " + produtos.getEstoqueProds().getNomeProduto() + "\n");
-                writer.write("Quantidade: " + produtos.getQuantidade_prod() + "\n");
+                writer.write("Quantidade: " + produtos.getQuantidadeprod() + "\n");
             }
             writer.write("Observacoes: " + pedido.getObservacao());
 
         }catch (IOException e) {
-            System.out.println("Erro ao salvar o arquivo: " + e.getMessage() + "\n");
+            System.err.println("Erro ao salvar o arquivo: " + e.getMessage() + "\n");
         }
     }
 
-    public Long TotalPedidosPorData(LocalDate data) {
-        return pedidoRep.PedidosPorData(data);
+    public Long totalPedidosPorData(LocalDate data) {
+        return pedidoRep.pedidosPorData(data);
     }
-    public Long TotalPagamentoCartao(LocalDate data) {
-        return pedidoRep.TotalPedidosCartao(data);
+    public Long totalPagamentoCartao(LocalDate data) {
+        return pedidoRep.totalPedidosCartao(data);
     }
-    public Long TotalPagamentoDinheiro(LocalDate data) {
-        return pedidoRep.TotalPedidosDinheiro(data);
+    public Long totalPagamentoDinheiro(LocalDate data) {
+        return pedidoRep.totalPedidosDinheiro(data);
     }
-    public Long TotalPedidosDelivery(LocalDate data) {
-        return pedidoRep.PedidosDelivery(data);
+    public Long totalPedidosDelivery(LocalDate data) {
+        return pedidoRep.pedidosDelivery(data);
     }
-    public Long TotalPedidosBalcao(LocalDate data) {
-        return pedidoRep.TotalPedidosBalcao(data);
+    public Long totalPedidosBalcao(LocalDate data) {
+        return pedidoRep.totalPedidosBalcao(data);
     }
-    public Long TotalPagos(LocalDate data) {
-        return pedidoRep.TotalPagos(data);
+    public Long totalPagos(LocalDate data) {
+        return pedidoRep.totalPagos(data);
     }
-    public Long TotalCancelados(LocalDate data) {
-        return pedidoRep.TotalCancelados(data);
+    public Long totalCancelados(LocalDate data) {
+        return pedidoRep.totalCancelados(data);
     }
+
+    public static class RegistroNaoEncontradoException extends RuntimeException {
+        public RegistroNaoEncontradoException(String message) {
+            super(message);
+        }
+    }
+
 }
