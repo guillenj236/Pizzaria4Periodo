@@ -4,6 +4,8 @@ import br.com.uniamerica.pizzariaback.entity.*;
 import br.com.uniamerica.pizzariaback.repository.PedidoRep;
 import br.com.uniamerica.pizzariaback.repository.PizzaRep;
 import br.com.uniamerica.pizzariaback.repository.ProdutosRep;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -133,7 +135,7 @@ public class PedidoService {
 
             writer.write("Total do pedido: " + pedido.getPedidopreco());
         }catch (IOException e) {
-            System.err.println("Erro ao salvar o arquivo: " + e.getMessage() + "\n");
+            logger.error("Erro ao salvar o arquivo: " + e.getMessage(), e);
         }
     }
 
@@ -158,7 +160,7 @@ public class PedidoService {
             writer.write("Observacoes: " + pedido.getObservacao());
 
         }catch (IOException e) {
-            System.err.println("Erro ao salvar o arquivo: " + e.getMessage() + "\n");
+            logger.error("Erro ao salvar o arquivo: " + e.getMessage(), e);
         }
     }
 
@@ -189,5 +191,8 @@ public class PedidoService {
             super(message);
         }
     }
+
+    private static final Logger logger = LoggerFactory.getLogger(PedidoService.class);
+
 
 }
