@@ -30,6 +30,22 @@ class PizzaDtoTests {
          Assertions.assertEquals(Tamanho.GG,pizzaDTO.getTamanho());
      }
      @Test
+     void getSetTamanho2(){
+         pizzaDTO.setTamanho(Tamanho.P);
+         Assertions.assertEquals(Tamanho.P,pizzaDTO.getTamanho());
+
+     }
+    @Test
+    void getSetTamanho3(){
+        pizzaDTO.setTamanho(Tamanho.M);
+        Assertions.assertEquals(Tamanho.M,pizzaDTO.getTamanho());
+    }
+    @Test
+    void getSetTamanho4(){
+        pizzaDTO.setTamanho(Tamanho.G);
+        Assertions.assertEquals(Tamanho.G,pizzaDTO.getTamanho());
+    }
+     @Test
     void construtorVazioTest(){
          PizzaDTO pizzaDTO3 = new PizzaDTO();
          Assertions.assertEquals(pizzaDTO2,pizzaDTO3);

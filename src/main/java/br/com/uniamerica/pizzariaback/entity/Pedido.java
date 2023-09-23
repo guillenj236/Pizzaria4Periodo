@@ -71,7 +71,7 @@ public class Pedido extends AbstractEntity{
     public Pedido(){
 
     }
-
+    @SuppressWarnings("java:S107")
     public Pedido(Long id,boolean entrega, Status status, List<Pizza> pizzas, List<Produtos> produtos, float pedidopreco, boolean pagamentoCartao, boolean pagamentoDinheiro, Funcionario funcionario, String observacao, LocalDateTime cadastro, Usuario usuario, LocalDate dataPedido, boolean delivery) {
        this.id = id;
         this.entrega = entrega;

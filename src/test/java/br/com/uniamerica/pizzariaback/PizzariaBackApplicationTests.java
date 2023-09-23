@@ -14,10 +14,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @SpringBootTest
 class PizzariaBackApplicationTests {
@@ -190,6 +187,9 @@ class PizzariaBackApplicationTests {
 		Mockito.when(pedidoRep.findById(1L)).thenReturn(Optional.of(pedido));
 		Mockito.when(pedidoRep.findById(2L)).thenReturn(Optional.of(pedido2));
 		Mockito.when(pedidoRep.findAll()).thenReturn(pedidoList);
+
+		Mockito.when(pedidoRep.findByStatus(Status.ATIVO)).thenReturn(pedidoList);
+		Mockito.when(pedidoRep.findByDelivery(true)).thenReturn(pedidoList);
 	}
 	@Test
 	void testCriaUser(){
@@ -213,6 +213,21 @@ class PizzariaBackApplicationTests {
 		Usuario usuario = new Usuario(1L,"nome","999999999");
 		var editaUser = usuarioController.editarUsuario(7L, usuario);
 		Assertions.assertEquals("Error: Nao foi possivel indentificar o usuario informado",editaUser.getBody());
+
+	}
+
+	@Test
+	void testCadastraUserVazio(){
+		UsuarioDTO usuarioDTO = new UsuarioDTO("","45998036059");
+		ResponseEntity<String> responseEntity = usuarioController.cadastrarUser(usuarioDTO);
+		Assertions.assertEquals("Error: Nome nao pode ser nulo!!", responseEntity.getBody());
+	}
+
+	@Test
+	void testExcluirUsuarioInexistente(){
+		ResponseEntity<String> responseEntity = usuarioController.deletaUsuario(999L);
+		Assertions.assertEquals("Error: Não foi possivel identificar o usuario informado.", responseEntity.getBody());
+
 
 	}
 
@@ -546,6 +561,7 @@ class PizzariaBackApplicationTests {
 		var pizza = pizzaController.deleta(500L);
 		Assertions.assertEquals("Error: Não foi possivel identificar o pizza informado.",pizza.getBody());
 	}
+
 	@Test
 	void testFindByIDpizza(){
 		pizzaController.cadastrar(new PizzaDTO(saboresList,20,1, Tamanho.P));
@@ -673,5 +689,41 @@ class PizzariaBackApplicationTests {
 		Assertions.assertEquals("Error: Não foi possivel identificar o pedido informado.",pedido.getBody());
 	}
 
+	@Test
+	void FindByIDpedido(){
+		Usuario usuarioTest = new Usuario(1L,"nome","999999999");
+		Funcionario funcionarioTest = new Funcionario(1L,"David");
+		pedidoController.cadastrarPedido(new PedidoDTO(true,Status.A_CAMINHO,pizzaList,produtosList,20,
+				false,false,funcionarioTest,"teste",usuarioTest,false,LocalDate.now()));
+
+		var pedido = pedidoController.findByIdPath(1L);
+		Assertions.assertEquals(Objects.requireNonNull(pedido.getBody()).getUsuario(), pedidoController.findByIdPath(1L).getBody().getUsuario());
+	}
+
+	@Test
+	void FindAllPedidos(){
+		ResponseEntity<List<Pedido>> pedidoFuncaoController = pedidoController.listaPedidos();
+		List<Pedido> pedidoListController = pedidoFuncaoController.getBody();
+		Assertions.assertNotNull(pedidoListController);
+		for (int i = 0; i < pedidoList.size(); i++){
+			Assertions.assertEquals(pedidoList.get(i),pedidoListController.get(i));
+		}
+	}
+
+	@Test
+	void testFindEmAndamento(){
+		ResponseEntity<List<Pedido>> pedidoFuncaoController = pedidoController.solicitados();
+		List<Pedido> pedidoListController = pedidoFuncaoController.getBody();
+		Assertions.assertNotNull(pedidoListController);
+		for (int i = 0; i< pedidoList.size(); i++){
+			Assertions.assertEquals(pedidoList.get(i), pedidoListController.get(i));
+		}
+	}
+	@Test
+	void testFindDelivery(){
+		ResponseEntity<?> responseEntity = pedidoController.delivery(true);
+		Assertions.assertNotNull(responseEntity);
+		Assertions.assertTrue(responseEntity.getBody() instanceof Map);
+	}
 
 }

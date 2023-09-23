@@ -25,6 +25,7 @@ public class PedidoDTO extends AbstractDTO{
 
     }
 
+    @SuppressWarnings("java:S107")
     public PedidoDTO(boolean entrega, Status status, List<Pizza> pizzas, List<Produtos> produtos, float pedidopreco,
                      boolean pagamentoCartao, boolean pagamentoDinheiro, Funcionario funcionario, String observacao,
                      Usuario usuario, boolean delivery, LocalDate dataPedido) {

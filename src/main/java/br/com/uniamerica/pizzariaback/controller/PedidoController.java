@@ -1,15 +1,17 @@
 package br.com.uniamerica.pizzariaback.controller;
 import br.com.uniamerica.pizzariaback.dto.PedidoDTO;
-import br.com.uniamerica.pizzariaback.dto.RelatorioDiaDTO;
 import br.com.uniamerica.pizzariaback.entity.Pedido;
+import br.com.uniamerica.pizzariaback.entity.Status;
 import br.com.uniamerica.pizzariaback.repository.PedidoRep;
 import br.com.uniamerica.pizzariaback.service.PedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+
 
 @RestController
 @RequestMapping(value = "/api/pedido")
@@ -54,28 +56,32 @@ public class PedidoController {
         }
     }
 
-    @GetMapping("/totaldia")
-    public RelatorioDiaDTO getTotalPedidosPorData(@RequestParam("data") LocalDate data){
-        Long totalPedidos = pedidoService.totalPedidosPorData(data);
-        Long totalPedidosCartao = pedidoService.totalPagamentoCartao(data);
-        Long totalPedidosDinheiro = pedidoService.totalPagamentoDinheiro(data);
-        Long totalPedidosDelivery = pedidoService.totalPedidosDelivery(data);
-        Long totalPedidosBalcao = pedidoService.totalPedidosBalcao(data);
-        Long totalPedidosPagos = pedidoService.totalPagos(data);
-        Long totalPedidosCancelados = pedidoService.totalCancelados(data);
 
-        RelatorioDiaDTO relatorioDiaDTO = new RelatorioDiaDTO();
-        relatorioDiaDTO.setTotalPedidos(totalPedidos);
-        relatorioDiaDTO.setTotalPedidosCartao(totalPedidosCartao);
-        relatorioDiaDTO.setTotalPedidosDinheiro(totalPedidosDinheiro);
-        relatorioDiaDTO.setTotalPedidosDelivery(totalPedidosDelivery);
-        relatorioDiaDTO.setTotalPedidosBalcao(totalPedidosBalcao);
-        relatorioDiaDTO.setTotalPedidosPagos(totalPedidosPagos);
-        relatorioDiaDTO.setTotalPedidosCancelados(totalPedidosCancelados);
-
-
-        return relatorioDiaDTO;
+    @GetMapping("/solicitados")
+    public ResponseEntity<List<Pedido>> solicitados(){
+        List<Pedido> pedidosAndamento = this.pedidoRep.findByStatus(Status.ATIVO);
+        return ResponseEntity.ok(pedidosAndamento);
     }
+
+    @GetMapping("/delivery")
+    public ResponseEntity<Map<String, Long>> delivery(@PathVariable("ativo") boolean delivery){
+        List<Pedido> pedidos;
+        if (!delivery){
+            pedidos = pedidoRep.findByDelivery(false);
+        }else {
+            pedidos = pedidoRep.findByDelivery(true);
+        }
+        long entregasProDelivery = pedidos.stream().filter(pedido -> pedido.isEntrega()).count();
+
+        long entregasPorBalcao = pedidos.size() - entregasProDelivery;
+
+        Map<String, Long> resultado = new HashMap<>();
+        resultado.put("entregasPorDelivery",entregasProDelivery);
+        resultado.put("entregasPorBalcao",entregasPorBalcao);
+
+        return ResponseEntity.ok(resultado);
+    }
+
 
     @PostMapping
     public ResponseEntity <String> cadastrarPedido(@RequestBody final PedidoDTO pedidoDTO){
