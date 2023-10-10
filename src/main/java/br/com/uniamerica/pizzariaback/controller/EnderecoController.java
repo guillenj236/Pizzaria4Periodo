@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+// add comentario teste
 @RestController
 @RequestMapping (value = "/api/endereco")
 public class EnderecoController {
